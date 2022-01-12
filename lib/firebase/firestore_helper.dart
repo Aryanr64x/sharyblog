@@ -1,0 +1,136 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shary/models/comment.dart';
+import 'package:shary/models/post.dart';
+
+class FireStoreHelper {
+  final FirebaseFirestore _store = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  Future<Post?> createPost({
+    required String title,
+    required String body,
+  }) async {
+    try {
+      var data = await _store.collection('posts').add({
+        'title': title,
+        'body': body,
+        'likes_count': 0,
+        'comments_count': 0,
+        'creator_name': auth.currentUser!.displayName,
+        'creator_avatar': auth.currentUser!.photoURL,
+      });
+      return Post(
+          uid: data.id,
+          title: title,
+          body: body,
+          creatorName: auth.currentUser!.displayName!,
+          creatorAvatar: auth.currentUser!.displayName!,
+          likesCount: 0,
+          commentsCount: 0);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<bool?> isLiked(String postId) async {
+    try {
+      var data = await _store
+          .collection('posts')
+          .doc(postId)
+          .collection('likes')
+          .where('username', isEqualTo: auth.currentUser!.displayName)
+          .get();
+      if (data.docs.isEmpty) {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<bool> like(String postId, int likesCount) async {
+    try {
+      var docref = _store.collection('posts').doc(postId);
+      await docref
+          .collection('likes')
+          .add({'username': auth.currentUser!.displayName});
+
+      await docref.update({'likes_count': likesCount + 1});
+
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> dislike(String postId, int likesCount) async {
+    try {
+      var docRef = _store.collection('posts').doc(postId);
+      var collections = await docRef
+          .collection('likes')
+          .where('username', isEqualTo: auth.currentUser!.displayName)
+          .get();
+      for (var data in collections.docs) {
+        await data.reference.delete();
+      }
+      await docRef.update({'likes_count': likesCount--});
+
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<Comment?> addComment(
+      String postId, String body, int commentsCount) async {
+    try {
+      var docref = _store.collection('posts').doc(postId);
+      var commentref = await docref.collection('comments').add({
+        'body': body,
+        'creator_name': auth.currentUser!.displayName,
+        'creator_avatar': auth.currentUser!.photoURL,
+        'created_at': FieldValue.serverTimestamp()
+      });
+      await docref.update({'comments_count': commentsCount + 1});
+      print("The update is successful");
+      return Comment(
+          uid: commentref.id,
+          body: body,
+          creatorName: auth.currentUser!.displayName!,
+          creatorAvatar: auth.currentUser!.photoURL!);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<List<Comment>?> fetchComments(String postId) async {
+    List<Comment> comments = [];
+    try {
+      var queries = await _store
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .get();
+
+      for (var comment_data in queries.docs) {
+        comments.add(
+          Comment(
+            uid: comment_data.id,
+            body: comment_data['body'],
+            creatorName: comment_data['creator_name'],
+            creatorAvatar: comment_data['creator_avatar'],
+          ),
+        );
+      }
+      return comments;
+    } catch (e) {
+      print(e);
+    }
+  }
+}
