@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shary/post_data.dart';
+import 'package:shary/screens/profile_screen.dart';
 
 class PostCardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(10.0),
@@ -16,7 +16,7 @@ class PostCardHeader extends StatelessWidget {
               child: CircleAvatar(
                 minRadius: 30.0,
                 backgroundImage: NetworkImage(
-                    Provider.of<PostData>(context).post.creatorName),
+                    Provider.of<PostData>(context).post.creatorAvatar),
               ),
               flex: 2,
             ),
@@ -28,10 +28,25 @@ class PostCardHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    Provider.of<PostData>(context).post.creatorName,
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (BuildContext contexted) {
+                          return ProfileScreen(
+                              username: Provider.of<PostData>(context)
+                                  .post
+                                  .creatorName,
+                              userAvatar: Provider.of<PostData>(context)
+                                  .post
+                                  .creatorAvatar);
+                        },
+                      ));
+                    },
+                    child: Text(
+                      Provider.of<PostData>(context).post.creatorName,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18.0),
+                    ),
                   ),
                   Text("2 hrs ago")
                 ],

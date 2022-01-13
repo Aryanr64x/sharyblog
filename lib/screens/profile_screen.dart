@@ -6,6 +6,7 @@ import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/post.dart';
 import 'package:shary/post_data.dart';
 import 'package:shary/widgets/post_card_widget.dart';
+import 'package:shary/widgets/profile_app_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
   static final String id = "profile_screen";
@@ -32,70 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
           child: CustomScrollView(
             slivers: [
-              SliverAppBar(
-                automaticallyImplyLeading: false,
-                expandedHeight: 249.0,
-                stretch: true,
-                backgroundColor: Colors.white,
-                flexibleSpace: FlexibleSpaceBar(
-                  stretchModes: [StretchMode.fadeTitle],
-                  background: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 75.0,
-                        backgroundImage: Image.network(
-                                "https://upload.wikimedia.org/wikipedia/en/c/c6/Jesse_Pinkman_S5B.png")
-                            .image,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Center(
-                          child: Text(
-                            "Jessie Pinkman",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Row(
-                        children: const [
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                "21 posts",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                              child: Center(
-                            child: Text(
-                              "789 followers",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )),
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                "75 follows",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              ProfileAppBar(username: widget.username, userAvatar: widget.userAvatar),
               SliverFixedExtentList(
                 delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
