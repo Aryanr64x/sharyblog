@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shary/screens/home_screen.dart';
 import 'package:shary/screens/new_post_screen.dart';
+import 'package:shary/screens/profile_screen.dart';
 import 'package:shary/screens/sign_in_screen.dart';
 import 'package:shary/screens/sign_up_screen.dart';
 import 'package:shary/screens/sign_up_transition_screen.dart';

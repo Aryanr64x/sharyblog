@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shary/models/post.dart';
 import 'package:shary/post_data.dart';
 import 'package:shary/screens/new_post_screen.dart';
+import 'package:shary/screens/profile_screen.dart';
 import 'package:shary/screens/welcome_screen.dart';
 import 'package:shary/widgets/post_card_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -77,8 +78,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Icon(
-                Icons.account_circle,
+              child: IconButton(
+                icon: Icon(Icons.account_circle),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (BuildContext context) {
+                    return ProfileScreen(username: auth.currentUser!.displayName!, userAvatar: auth.currentUser!.photoURL!,);
+                  }));
+                },
               ),
             ),
             Padding(

@@ -133,4 +133,29 @@ class FireStoreHelper {
       print(e);
     }
   }
+
+  Future<List<Post>?> fetchPostByUser(String username) async {
+    List<Post> posts = [];
+    try {
+      var queries = await _store
+          .collection('posts')
+          .where('creator_name', isEqualTo: username)
+          .get();
+      for (var post in queries.docs) {
+        posts.add(
+          Post(
+              uid: post.id,
+              title: post['title'],
+              body: post['body'],
+              likesCount: post['likes_count'],
+              commentsCount: post['comments_count'],
+              creatorName: post['creator_name'],
+              creatorAvatar: post['creator_avatar']),
+        );
+      }
+      return posts;
+    } catch (e) {
+      print(e);
+    }
+  }
 }

@@ -5,6 +5,7 @@ import 'package:shary/post_data.dart';
 class PostCardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(10.0),
@@ -15,7 +16,7 @@ class PostCardHeader extends StatelessWidget {
               child: CircleAvatar(
                 minRadius: 30.0,
                 backgroundImage: NetworkImage(
-                    Provider.of<PostData>(context).post.creatorAvatar),
+                    Provider.of<PostData>(context).post.creatorName),
               ),
               flex: 2,
             ),
