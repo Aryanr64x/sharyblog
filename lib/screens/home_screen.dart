@@ -43,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: HomeAppBar(
+          context: context,
           onNewPostAdded: (Post newPost) {
             setState(() {
               posts.insert(0, newPost);
@@ -76,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void listener() {
     // check we have reached the last page which is actually the loading page .....
+
     if (_pageController.position.pixels ==
         _pageController.position.maxScrollExtent) {
       print(
@@ -88,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           isRefreshing = true;
         });
-        posts = [];
+
         fetchPosts(true);
       }
     }
@@ -99,21 +101,27 @@ class _HomeScreenState extends State<HomeScreen> {
   void fetchPosts(bool initial) async {
     if (initial) {
       var data = await FireStoreHelper().getFirstPosts(2);
-      // we will jump the page controller anyway be it success of failure
-      _pageController.jumpTo(0);
+
       if (data != null) {
         setState(() {
+          // Maybe the posts is filled if the functionality is called from swipe to refresh
+          posts = [];
           posts = data['posts'];
         });
+        // we will jump the page controller anyway be it success of failure
         last_snapshot = data['last_snapshot'];
       } else {
         // display error in fetching posts
       }
+      setState(() {
+        isRefreshing = false;
+      });
+      // we will jump the page controller anyway be it success of failure
+      _pageController.jumpTo(0);
     } else {
       var data = await FireStoreHelper()
           .getNextPosts(1, last_snapshot as DocumentSnapshot);
       if (data != null) {
-        isRefreshing = false;
         setState(() {
           posts.addAll(data['posts']);
         });

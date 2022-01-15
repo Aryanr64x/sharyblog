@@ -6,16 +6,16 @@ import 'package:shary/screens/new_post_screen.dart';
 import 'package:shary/screens/profile_screen.dart';
 import 'package:shary/screens/welcome_screen.dart';
 
-class HomeAppBar extends StatelessWidget {
+class HomeAppBar extends AppBar {
   Function(Post) onNewPostAdded;
-  HomeAppBar({required this.onNewPostAdded});
-
+  BuildContext context;
+  HomeAppBar({required this.onNewPostAdded, required this.context});
   @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: Text("Shary"),
-      backgroundColor: Theme.of(context).primaryColor,
-      actions: [
+  Widget? get title => Text("Shary");
+  @override
+  Color? get backgroundColor => Theme.of(context).primaryColor;
+  @override
+  List<Widget>? get actions => [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: IconButton(
@@ -57,7 +57,5 @@ class HomeAppBar extends StatelessWidget {
             },
           ),
         ),
-      ],
-    );
-  }
+      ];
 }
