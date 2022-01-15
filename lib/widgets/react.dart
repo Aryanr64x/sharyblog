@@ -5,6 +5,7 @@ import '../post_data.dart';
 import 'package:shary/models/post.dart';
 
 class ReactPanel extends StatefulWidget {
+  String name = "name";
   @override
   State<ReactPanel> createState() => _ReactPanelState();
 }
@@ -12,7 +13,7 @@ class ReactPanel extends StatefulWidget {
 class _ReactPanelState extends State<ReactPanel> {
   bool isLoading = true;
   bool? isLiked;
-
+  String get myname => widget.name;
   final FireStoreHelper storeHelper = FireStoreHelper();
 
   @override

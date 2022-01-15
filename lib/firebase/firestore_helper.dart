@@ -7,6 +7,58 @@ import 'package:shary/models/post.dart';
 class FireStoreHelper {
   final FirebaseFirestore _store = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
+  Future<Map<String, dynamic>?> getFirstPosts(int amt) async {
+    try {
+      List<Post> posts = [];
+      QuerySnapshot data =
+          await _store.collection('posts').orderBy('created_at').limit(2).get();
+      for (var post in data.docs) {
+        posts.add(Post(
+            uid: post.id,
+            title: post['title'],
+            body: post['body'],
+            likesCount: post['likes_count'],
+            commentsCount: post['comments_count'],
+            creatorName: post['creator_name'],
+            creatorAvatar: post['creator_avatar']));
+      }
+      return {
+        'posts': posts,
+        'last_snapshot': data.docs.last,
+      };
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<Map<String, dynamic>?> getNextPosts(
+      int amt, DocumentSnapshot last_snapshot) async {
+    try {
+      List<Post> posts = [];
+      QuerySnapshot data = await _store
+          .collection('posts')
+          .orderBy('created_at')
+          .startAfterDocument(last_snapshot as DocumentSnapshot)
+          .limit(1)
+          .get();
+      for (var post in data.docs) {
+        posts.add(Post(
+            uid: post.id,
+            title: post['title'],
+            body: post['body'],
+            likesCount: post['likes_count'],
+            commentsCount: post['comments_count'],
+            creatorName: post['creator_name'],
+            creatorAvatar: post['creator_avatar']));
+      }
+      return {
+        'posts': posts,
+        'last_snapshot': data.docs.last,
+      };
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Future<Post?> createPost({
     required String title,

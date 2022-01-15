@@ -4,10 +4,9 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:shary/post_data.dart';
 
 class PostCardBody extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-    print( Provider.of<PostData>(context).post.body);
+    print("SOME SHIT HAS BEEN PRINBTED FROM HEREE");
     return Expanded(
       flex: 8,
       child: Container(
