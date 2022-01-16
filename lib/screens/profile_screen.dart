@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shary/firebase/firestore_helper.dart';
@@ -19,10 +20,14 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final ScrollController _controller = ScrollController();
+  QueryDocumentSnapshot? last_snapshot;
+
   List<Post> posts = [];
   @override
   void initState() {
-     fetchPosts();
+    fetchPosts(true);
+    _controller.addListener(listener);
   }
 
   @override
@@ -32,17 +37,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: Padding(
           padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
           child: CustomScrollView(
+            controller: _controller,
             slivers: [
-              ProfileAppBar(username: widget.username, userAvatar: widget.userAvatar),
+              ProfileAppBar(
+                  username: widget.username, userAvatar: widget.userAvatar),
               SliverFixedExtentList(
                 delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
-                  return ChangeNotifierProvider<PostData>(
-                    create: (context) => PostData(posts[index]),
-                    child: PostCard(),
-                  );
-
-                }, childCount: posts.length),
+                  if (index == posts.length) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [CircularProgressIndicator()],
+                    );
+                  } else {
+                    return ChangeNotifierProvider<PostData>(
+                      create: (context) => PostData(posts[index]),
+                      child: PostCard(),
+                    );
+                  }
+                }, childCount: posts.length + 1),
                 itemExtent: 700.0,
               )
             ],
@@ -52,15 +65,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void fetchPosts() async {
-    var posts_data = await FireStoreHelper().fetchPostByUser(widget.username);
-    if (posts_data == null) {
-      print("show error");
+  void fetchPosts(bool initial) async {
+    if (initial) {
+      var data = await FireStoreHelper()
+          .fetchInititalPostsByUser(username: widget.username, amt: 2);
+      if (data != null) {
+        last_snapshot = data['last_snapshot'];
+        setState(() {
+          posts = data['posts'];
+        });
+      } else {
+        // show error for not getting the posts most prolly due to internet connection
+      }
     } else {
-      print(posts_data);
-      setState(() {
-        posts.addAll(posts_data);
-      });
+      var data = await FireStoreHelper().fetchNextPostsByUser(
+          username: widget.username, last_snapshot: last_snapshot!, amt: 1);
+      if (data != null) {
+        last_snapshot = data['last_snapshot'];
+        setState(() {
+          posts.addAll(data['posts']);
+        });
+      } else {
+        // show error for not getting posts most prolly due to internet connection
+      }
+    }
+  }
+
+  void listener() {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+      fetchPosts(false);
     }
   }
 }

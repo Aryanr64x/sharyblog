@@ -70,6 +70,7 @@ class FireStoreHelper {
         'body': body,
         'likes_count': 0,
         'comments_count': 0,
+        'created_at': FieldValue.serverTimestamp(),
         'creator_name': auth.currentUser!.displayName,
         'creator_avatar': auth.currentUser!.photoURL,
       });
@@ -186,13 +187,17 @@ class FireStoreHelper {
     }
   }
 
-  Future<List<Post>?> fetchPostByUser(String username) async {
+  Future<Map<String, dynamic>?> fetchInititalPostsByUser(
+      {required String username, required int amt}) async {
     List<Post> posts = [];
     try {
       var queries = await _store
           .collection('posts')
           .where('creator_name', isEqualTo: username)
+          .orderBy('created_at')
+          .limit(amt)
           .get();
+
       for (var post in queries.docs) {
         posts.add(
           Post(
@@ -205,7 +210,45 @@ class FireStoreHelper {
               creatorAvatar: post['creator_avatar']),
         );
       }
-      return posts;
+      return {
+        'posts': posts,
+        'last_snapshot': queries.docs.last,
+      };
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<Map<String, dynamic>?> fetchNextPostsByUser(
+      {required String username,
+      required DocumentSnapshot last_snapshot,
+      required int amt}) async {
+    List<Post> posts = [];
+    try {
+      var queries = await _store
+          .collection('posts')
+          .where('creator_name', isEqualTo: username)
+          .orderBy('created_at')
+          .startAfterDocument(last_snapshot)
+          .limit(amt)
+          .get();
+
+      for (var post in queries.docs) {
+        posts.add(
+          Post(
+              uid: post.id,
+              title: post['title'],
+              body: post['body'],
+              likesCount: post['likes_count'],
+              commentsCount: post['comments_count'],
+              creatorName: post['creator_name'],
+              creatorAvatar: post['creator_avatar']),
+        );
+      }
+      return {
+        'posts': posts,
+        'last_snapshot': queries.docs.last,
+      };
     } catch (e) {
       print(e);
     }
