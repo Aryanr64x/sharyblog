@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/post.dart';
 import 'package:shary/post_data.dart';
+import 'package:shary/shary_toast.dart';
 import 'package:shary/widgets/post_card_widget.dart';
 import 'package:shary/widgets/profile_app_bar.dart';
 
@@ -76,6 +77,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
       } else {
         // show error for not getting the posts most prolly due to internet connection
+        SharyToast.show(
+            "We encountered a problem. cannot get posts anymore :(");
       }
     } else {
       var data = await FireStoreHelper().fetchNextPostsByUser(
@@ -87,6 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
       } else {
         // show error for not getting posts most prolly due to internet connection
+        SharyToast.show("Dude get your internet connection right!");
       }
     }
   }

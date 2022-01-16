@@ -13,6 +13,9 @@ class Error {
     } else if (e.code == 'user-not-found') {
       SharyToast.show(
           "This email id has not been registered yet, please signup first");
+    } else if (e.code == 'weak-password') {
+      SharyToast.show(
+          "Please enter a strong enough password with atleast 6 charcaters");
     } else {
       SharyToast.show("We have some problemm now, try againn later");
     }

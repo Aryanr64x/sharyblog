@@ -8,6 +8,7 @@ import 'package:shary/post_data.dart';
 import 'package:shary/screens/new_post_screen.dart';
 import 'package:shary/screens/profile_screen.dart';
 import 'package:shary/screens/welcome_screen.dart';
+import 'package:shary/shary_toast.dart';
 import 'package:shary/widgets/home_app_bar.dart';
 import 'package:shary/widgets/post_card_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -111,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
         // we will jump the page controller anyway be it success of failure
         last_snapshot = data['last_snapshot'];
       } else {
-        // display error in fetching posts
+        SharyToast.show("Please check your internet connection...");
       }
       setState(() {
         isRefreshing = false;
@@ -128,6 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
         last_snapshot = data['last_snapshot'];
       } else {
         // show error in getting more posts may be you are out of internet connection
+        SharyToast.show("Please check your internet connection...");
       }
     }
   }

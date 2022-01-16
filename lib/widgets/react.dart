@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:provider/provider.dart';
+import 'package:shary/shary_toast.dart';
 import '../post_data.dart';
 import 'package:shary/models/post.dart';
 
@@ -24,11 +25,13 @@ class _ReactPanelState extends State<ReactPanel> {
   }
 
   void checkIsLiked() async {
-    isLiked = await storeHelper
+    var data = await storeHelper
         .isLiked(Provider.of<PostData>(context, listen: false).post.uid);
     if (isLiked == null) {
-      print("error loading ");
+      SharyToast.show(
+          "We are encountering some error.. Make sure your internet connection is right");
     } else {
+      isLiked = data;
       setState(() {
         isLoading = false;
       });
@@ -48,10 +51,7 @@ class _ReactPanelState extends State<ReactPanel> {
 
   Widget likeOrUnlikeIcon() {
     if (isLoading) {
-      return Icon(
-        Icons.donut_large,
-        color: Theme.of(context).primaryColor,
-      );
+      return Text('');
     } else {
       if (isLiked!) {
         return IconButton(
@@ -92,7 +92,8 @@ class _ReactPanelState extends State<ReactPanel> {
         });
         Provider.of<PostData>(context, listen: false).decreaseLikesCount();
       } else {
-        print("Sorry the action could not be completed ! Try again later");
+        SharyToast.show(
+            "We cannot complete that action currently . Please check your internet connection and try again");
       }
     } else {
       var isSuccessful = await storeHelper.like(
@@ -105,7 +106,8 @@ class _ReactPanelState extends State<ReactPanel> {
         });
         Provider.of<PostData>(context, listen: false).increaseLikesCount();
       } else {
-        print("Sorry the action could not be completed . Try again later");
+        SharyToast.show(
+            "We are having trouble connecting to the internet . Please try again later");
       }
     }
   }

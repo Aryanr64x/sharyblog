@@ -100,6 +100,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               context, SignUpTransitionScreen.id);
                         } on FirebaseException catch (e) {
                           Navigator.pop(context);
+                          print("HERE GOES TEH ERROR CODE" + e.code);
                           Error.show(e);
                         }
                       }

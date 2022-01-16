@@ -51,11 +51,12 @@ class _CommentsListState extends State<CommentsList> {
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Something went wrong');
+                  return Text(
+                      'Something went wrong . We cannot fetch comments right now');
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading");
+                  return CircularProgressIndicator();
                 }
 
                 return ListView(

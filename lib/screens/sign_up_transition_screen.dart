@@ -2,8 +2,10 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:shary/error.dart';
 import 'package:shary/firebase/firebase_storage_helper.dart';
 import 'package:shary/screens/home_screen.dart';
+import 'package:shary/shary_toast.dart';
 import 'package:shary/widgets/primary_button_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,6 +40,8 @@ class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
               await auth.currentUser!.updateDisplayName(username);
             } catch (e) {
               print(e);
+              SharyToast.show(
+                  "We are having problem updating your profile info. Please check your internet connection");
             }
           } else {
             // show error for updating an username
@@ -140,7 +144,8 @@ class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
           await auth.currentUser!.updatePhotoURL(url);
         } catch (e) {
           print(e);
-          print("sorry we could not upload to firebase");
+          SharyToast.show(
+              "Sorry , We are having problem uploading picture at the moment !");
         }
       }
     } else {

@@ -98,6 +98,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           }
                         } on FirebaseException catch (e) {
                           Navigator.pop(context);
+                          print("HERE GOES TEH ERROR CODE" + e.code);
                           Error.show(e);
                         }
                       }

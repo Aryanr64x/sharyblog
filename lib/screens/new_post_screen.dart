@@ -73,7 +73,7 @@ class NewPostScreen extends StatelessWidget {
                             Navigator.pop(context);
 
                             SharyDialog.show(
-                                "Sorry we could not create the post at this time, Try again later");
+                                "Sorry we could not create the post at this time, Try again later. You maybe out of internet ");
                           }
                         }
                       })
