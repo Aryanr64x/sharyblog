@@ -27,7 +27,7 @@ class _ReactPanelState extends State<ReactPanel> {
   void checkIsLiked() async {
     var data = await storeHelper
         .isLiked(Provider.of<PostData>(context, listen: false).post.uid);
-    if (isLiked == null) {
+    if (data == null) {
       SharyToast.show(
           "We are encountering some error.. Make sure your internet connection is right");
     } else {

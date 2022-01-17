@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shary/dialog.dart';
 import 'package:shary/error.dart';
 import 'package:shary/screens/home_screen.dart';
+import 'package:shary/screens/sign_in_screen.dart';
 import 'package:shary/screens/sign_up_transition_screen.dart';
 import 'package:shary/shary_toast.dart';
 import 'package:shary/widgets/primary_button_widget.dart';
@@ -88,23 +89,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(
                   height: 30.0,
                 ),
-                AppPrimaryButton(
-                    title: "SignUp",
-                    onTap: () async {
-                      if (_formkey.currentState!.validate()) {
-                        showLoaderDialog(context);
-                        try {
-                          await firebaseAuth.createUserWithEmailAndPassword(
-                              email: email!, password: password!);
-                          Navigator.popAndPushNamed(
-                              context, SignUpTransitionScreen.id);
-                        } on FirebaseException catch (e) {
-                          Navigator.pop(context);
-                          print("HERE GOES TEH ERROR CODE" + e.code);
-                          Error.show(e);
-                        }
-                      }
-                    }),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AppPrimaryButton(
+                        title: "SignUp",
+                        onTap: () async {
+                          if (_formkey.currentState!.validate()) {
+                            showLoaderDialog(context);
+                            try {
+                              await firebaseAuth.createUserWithEmailAndPassword(
+                                  email: email!, password: password!);
+                              Navigator.popAndPushNamed(
+                                  context, SignUpTransitionScreen.id);
+                            } on FirebaseException catch (e) {
+                              Navigator.pop(context);
+                              print("HERE GOES TEH ERROR CODE" + e.code);
+                              Error.show(e);
+                            }
+                          }
+                        }),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.popAndPushNamed(context, SignInScreen.id);
+                        },
+                        child: Text("Already have an account?"))
+                  ],
+                )
               ],
             ),
           ),

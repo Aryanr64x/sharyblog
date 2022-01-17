@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shary/display_picture.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/post.dart';
 import 'package:shary/post_data.dart';
@@ -14,6 +15,7 @@ class ProfileScreen extends StatefulWidget {
   static final String id = "profile_screen";
   String username;
   String userAvatar;
+
   ProfileScreen({required this.username, required this.userAvatar});
 
   @override
@@ -23,7 +25,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final ScrollController _controller = ScrollController();
   QueryDocumentSnapshot? last_snapshot;
-
+  bool noPost = false;
   List<Post> posts = [];
   @override
   void initState() {
@@ -41,14 +43,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             controller: _controller,
             slivers: [
               ProfileAppBar(
-                  username: widget.username, userAvatar: widget.userAvatar),
+                userAvatar: widget.userAvatar,
+                username: widget.username,
+              ),
               SliverFixedExtentList(
                 delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
                   if (index == posts.length) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [CircularProgressIndicator()],
+                      children: [progressIndicatorOrNothing()],
                     );
                   } else {
                     return ChangeNotifierProvider<PostData>(
@@ -72,8 +76,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .fetchInititalPostsByUser(username: widget.username, amt: 2);
       if (data != null) {
         last_snapshot = data['last_snapshot'];
+
         setState(() {
           posts = data['posts'];
+          if (posts.isEmpty) {
+            noPost = true;
+          }
         });
       } else {
         // show error for not getting the posts most prolly due to internet connection
@@ -98,6 +106,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void listener() {
     if (_controller.position.pixels == _controller.position.maxScrollExtent) {
       fetchPosts(false);
+    }
+  }
+
+  Widget progressIndicatorOrNothing() {
+    if (noPost) {
+      return Text("Dude has not posted even a single shit yo");
+    } else {
+      return CircularProgressIndicator();
     }
   }
 }

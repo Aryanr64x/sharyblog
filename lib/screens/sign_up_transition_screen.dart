@@ -21,14 +21,13 @@ class SignUpTransitionScreen extends StatefulWidget {
 }
 
 class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
-  late String username;
+  String? username;
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseStorageHelper storageHelper = FirebaseStorageHelper();
   final ImagePicker _picker = ImagePicker();
   File? file;
 
-  Image imageWidget = Image.asset(
-      "https://i0.wp.com/localkhabar.com/wp-content/uploads/2020/06/dummy-snapcode-avatar@2x.png?ssl=1");
+  Image imageWidget = Image.asset("images/avatar.jpg");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,19 +37,19 @@ class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
             print("This part has been reached");
             try {
               await auth.currentUser!.updateDisplayName(username);
+              await _uploadAvatar();
+              Navigator.popAndPushNamed(context, HomeScreen.id);
             } catch (e) {
               print(e);
               SharyToast.show(
                   "We are having problem updating your profile info. Please check your internet connection");
             }
           } else {
-            // show error for updating an username
+            SharyToast.show(
+                "Please enter a username atleast to continue with :)");
           }
 
-          await _uploadAvatar();
           print("tHIS PART HAS ALSO BEEN REACHED");
-
-          Navigator.popAndPushNamed(context, HomeScreen.id);
         },
         backgroundColor: Theme.of(context).primaryColor,
         child: Icon(Icons.arrow_forward),
@@ -150,7 +149,7 @@ class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
       }
     } else {
       try {
-        await auth.currentUser!.updatePhotoURL(kavatar);
+        await auth.currentUser!.updatePhotoURL('');
       } catch (e) {
         print(e);
       }

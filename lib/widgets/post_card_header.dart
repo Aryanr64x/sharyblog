@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shary/display_picture.dart';
 import 'package:shary/post_data.dart';
 import 'package:shary/screens/profile_screen.dart';
 
@@ -15,7 +16,8 @@ class PostCardHeader extends StatelessWidget {
             Expanded(
               child: CircleAvatar(
                 minRadius: 30.0,
-                backgroundImage: NetworkImage(
+                child: CircularProgressIndicator(),
+                backgroundImage: DisplayPicture.display(
                     Provider.of<PostData>(context).post.creatorAvatar),
               ),
               flex: 2,
@@ -33,12 +35,12 @@ class PostCardHeader extends StatelessWidget {
                       Navigator.push(context, MaterialPageRoute(
                         builder: (BuildContext contexted) {
                           return ProfileScreen(
-                              username: Provider.of<PostData>(context)
-                                  .post
-                                  .creatorName,
-                              userAvatar: Provider.of<PostData>(context)
-                                  .post
-                                  .creatorAvatar);
+                            userAvatar: Provider.of<PostData>(context)
+                                .post
+                                .creatorAvatar,
+                            username:
+                                Provider.of<PostData>(context).post.creatorName,
+                          );
                         },
                       ));
                     },

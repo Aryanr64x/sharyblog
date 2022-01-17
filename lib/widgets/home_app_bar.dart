@@ -9,7 +9,13 @@ import 'package:shary/screens/welcome_screen.dart';
 class HomeAppBar extends AppBar {
   Function(Post) onNewPostAdded;
   BuildContext context;
-  HomeAppBar({required this.onNewPostAdded, required this.context});
+  String username;
+  String avatar;
+  HomeAppBar(
+      {required this.onNewPostAdded,
+      required this.context,
+      required this.username,
+      required this.avatar});
   @override
   Widget? get title => Text("Shary");
   @override
@@ -35,10 +41,7 @@ class HomeAppBar extends AppBar {
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (BuildContext context) {
-                return ProfileScreen(
-                  username: FirebaseAuth.instance.currentUser!.displayName!,
-                  userAvatar: FirebaseAuth.instance.currentUser!.photoURL!,
-                );
+                return WelcomeScreen();
               }));
             },
           ),

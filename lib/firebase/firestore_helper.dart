@@ -27,6 +27,7 @@ class FireStoreHelper {
         'last_snapshot': data.docs.last,
       };
     } catch (e) {
+      print("AND HERE GOES THE GODDAM ERROR");
       print(e);
     }
   }
@@ -56,6 +57,7 @@ class FireStoreHelper {
         'last_snapshot': data.docs.last,
       };
     } catch (e) {
+      print("AND HERE GOES THE GODDAM ERROR");
       print(e);
     }
   }
@@ -83,6 +85,7 @@ class FireStoreHelper {
           likesCount: 0,
           commentsCount: 0);
     } catch (e) {
+      print("AND HERE GOES THE GODDAM ERROR");
       print(e);
     }
   }
@@ -210,11 +213,14 @@ class FireStoreHelper {
               creatorAvatar: post['creator_avatar']),
         );
       }
+
+      print("HERE GOES WHAT YOU ARE TRYING TO SEE");
+
       return {
         'posts': posts,
-        'last_snapshot': queries.docs.last,
+        'last_snapshot': (queries.docs.isEmpty) ? null : queries.docs.last,
       };
-    } catch (e) {
+    } on FirebaseException catch (e) {
       print(e);
     }
   }

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shary/display_picture.dart';
 
 class ProfileAppBar extends StatelessWidget {
   String username;
@@ -19,15 +20,13 @@ class ProfileAppBar extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 75.0,
-              backgroundImage: Image.network(
-                      "https://upload.wikimedia.org/wikipedia/en/c/c6/Jesse_Pinkman_S5B.png")
-                  .image,
+              backgroundImage: DisplayPicture.display(userAvatar),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  "Jessie Pinkman",
+                Text(
+                  username,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20.0,
@@ -76,7 +75,7 @@ class ProfileAppBar extends StatelessWidget {
   }
 
   Widget iconAsPerUser() {
-    if (username == FirebaseAuth.instance.currentUser!.displayName) {
+    if ("username" == FirebaseAuth.instance.currentUser!.displayName) {
       return IconButton(
           onPressed: () {},
           icon: Icon(

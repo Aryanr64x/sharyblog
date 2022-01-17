@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shary/dialog.dart';
 import 'package:shary/error.dart';
 import 'package:shary/screens/home_screen.dart';
+import 'package:shary/screens/sign_up_screen.dart';
 import 'package:shary/widgets/primary_button_widget.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -78,6 +79,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   },
                   obscureText: true,
                   decoration: InputDecoration(
+                    hintText: "Please enter your password",
                     errorText:
                         _passwordValidate ? null : "Please create a password",
                   ),
@@ -85,24 +87,36 @@ class _SignInScreenState extends State<SignInScreen> {
                 SizedBox(
                   height: 30.0,
                 ),
-                AppPrimaryButton(
-                    title: "Sign In",
-                    onTap: () async {
-                      if (_formkey.currentState!.validate()) {
-                        showLoaderDialog(context);
-                        try {
-                          final user = await auth.signInWithEmailAndPassword(
-                              email: email!, password: password!);
-                          if (user != null) {
-                            Navigator.popAndPushNamed(context, HomeScreen.id);
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AppPrimaryButton(
+                        title: "Sign In",
+                        onTap: () async {
+                          if (_formkey.currentState!.validate()) {
+                            showLoaderDialog(context);
+                            try {
+                              final user =
+                                  await auth.signInWithEmailAndPassword(
+                                      email: email!, password: password!);
+                              if (user != null) {
+                                Navigator.popAndPushNamed(
+                                    context, HomeScreen.id);
+                              }
+                            } on FirebaseException catch (e) {
+                              Navigator.pop(context);
+                              print("HERE GOES TEH ERROR CODE" + e.code);
+                              Error.show(e);
+                            }
                           }
-                        } on FirebaseException catch (e) {
-                          Navigator.pop(context);
-                          print("HERE GOES TEH ERROR CODE" + e.code);
-                          Error.show(e);
-                        }
-                      }
-                    }),
+                        }),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.popAndPushNamed(context, SignUpScreen.id);
+                        },
+                        child: Text("Dont have an account?"))
+                  ],
+                )
               ],
             ),
           ),

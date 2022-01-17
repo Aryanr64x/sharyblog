@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shary/screens/home_screen.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: WelcomeScreen.id,
+      initialRoute: initial(),
       routes: {
         WelcomeScreen.id: (context) => WelcomeScreen(),
         SignUpScreen.id: (context) => SignUpScreen(),
@@ -33,5 +34,13 @@ class MyApp extends StatelessWidget {
         primaryColor: Color(0xff223943),
       ),
     );
+  }
+
+  String initial() {
+    if (FirebaseAuth.instance.currentUser != null) {
+      return HomeScreen.id;
+    } else {
+      return WelcomeScreen.id;
+    }
   }
 }

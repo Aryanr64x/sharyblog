@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shary/display_picture.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/comment.dart';
 
@@ -66,7 +67,8 @@ class _CommentsListState extends State<CommentsList> {
                         document.data()! as Map<String, dynamic>;
                     return ListTile(
                       leading: CircleAvatar(
-                        backgroundImage: NetworkImage(data['creator_avatar']),
+                        backgroundImage:
+                            DisplayPicture.display(data['creator_avatar']),
                       ),
                       title: Text(data['creator_name']),
                       subtitle: Text(data['body']),

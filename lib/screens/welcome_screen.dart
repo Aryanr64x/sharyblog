@@ -29,12 +29,12 @@ class WelcomeScreen extends StatelessWidget {
             AppPrimaryButton(
                 title: "Sign In",
                 onTap: () {
-                  Navigator.pushNamed(context, SignInScreen.id);
+                  Navigator.popAndPushNamed(context, SignInScreen.id);
                 }),
             AppPrimaryButton(
                 title: "Sign Up",
                 onTap: () {
-                  Navigator.pushNamed(context, SignUpScreen.id);
+                  Navigator.popAndPushNamed(context, SignUpScreen.id);
                 }),
           ],
         ),

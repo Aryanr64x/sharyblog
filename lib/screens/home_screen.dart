@@ -28,14 +28,23 @@ class _HomeScreenState extends State<HomeScreen> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore store = FirebaseFirestore.instance;
   final _pageController = PageController();
+
   bool isRefreshing = false;
   QueryDocumentSnapshot? last_snapshot;
   List<Post> posts = [];
   final double REFRESH_OFFEST = -70.8899663140498;
+  late String username;
+  late String userAvatar;
 
   @override
   void initState() {
-    super.initState();
+    // super.initState();
+    // username = auth.currentUser!.displayName!;
+    // userAvatar = auth.currentUser!.photoURL!;
+    print("HERE I GO PRINTING THE USERNAME ITS VISIBLE U BITCH " +
+        auth.currentUser!.displayName!);
+    username = auth.currentUser!.displayName!;
+    userAvatar = auth.currentUser!.displayName!;
     fetchPosts(true);
     _pageController.addListener(listener);
   }
@@ -43,15 +52,56 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: HomeAppBar(
-          context: context,
-          onNewPostAdded: (Post newPost) {
-            setState(() {
-              posts.insert(0, newPost);
-            });
-            _pageController.jumpTo(0);
-          },
-        ) as AppBar,
+        appBar: AppBar(
+          title: Text("Shary"),
+          backgroundColor: Theme.of(context).primaryColor,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: IconButton(
+                onPressed: () async {
+                  var data =
+                      await Navigator.pushNamed(context, NewPostScreen.id);
+
+                  Post newPost = data as Post;
+                  setState(() {
+                    posts.add(newPost);
+                  });
+                },
+                icon: Icon(Icons.add),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: IconButton(
+                icon: Icon(Icons.account_circle),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (BuildContext context) {
+                    return ProfileScreen(
+                      userAvatar: userAvatar,
+                      username: username,
+                    );
+                  }));
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: IconButton(
+                icon: Icon(Icons.power_settings_new),
+                onPressed: () async {
+                  try {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.popAndPushNamed(context, WelcomeScreen.id);
+                  } catch (e) {
+                    print(e);
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
         body: Stack(
           children: [
             mayOrMayNotbeACircularIndicator(),
@@ -150,3 +200,16 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 }
+
+
+// HomeAppBar(
+//           username: username,
+//           avatar: userAvatar,
+//           context: context,
+//           onNewPostAdded: (Post newPost) {
+//             setState(() {
+//               posts.insert(0, newPost);
+//             });
+//             _pageController.jumpTo(0);
+//           },
+//         ) as AppBar
