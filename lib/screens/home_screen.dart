@@ -34,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Post> posts = [];
   final double REFRESH_OFFEST = -70.8899663140498;
   late String username;
+  late String userId;
   late String? userAvatar;
 
   @override
@@ -41,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // super.initState();
     username = auth.currentUser!.displayName!;
     userAvatar = auth.currentUser!.photoURL;
+    userId = auth.currentUser!.uid;
 
     if (auth.currentUser!.photoURL == null) {
       print("BITCH THE PHOTO URL IS NULL");
@@ -81,9 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (BuildContext context) {
                     return ProfileScreen(
-                      userAvatar: userAvatar,
-                      username: username,
-                    );
+                        userAvatar: userAvatar,
+                        username: username,
+                        userId: userId);
                   }));
                 },
               ),

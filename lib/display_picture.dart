@@ -7,9 +7,12 @@ class DisplayPicture {
   static Widget display(String? url, double radius) {
     if (url == null) {
       print("THE URL IS EMPTY");
-      return CircleAvatar(
-        backgroundImage: const AssetImage('images/avatar.jpg'),
-        radius: radius,
+      return Container(
+        height: radius,
+        width: radius,
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(image: AssetImage('images/avatar.jpg'))),
       );
     } else {
       return CachedNetworkImage(

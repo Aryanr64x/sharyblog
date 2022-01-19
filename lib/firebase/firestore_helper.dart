@@ -10,8 +10,12 @@ class FireStoreHelper {
   Future<Map<String, dynamic>?> getFirstPosts(int amt) async {
     try {
       List<Post> posts = [];
-      QuerySnapshot data =
-          await _store.collection('posts').orderBy('created_at').limit(2).get();
+      QuerySnapshot data = await _store
+          .collection('posts')
+          .orderBy('created_at', descending: true)
+          .limit(2)
+          .get();
+
       for (var post in data.docs) {
         posts.add(Post(
             uid: post.id,
@@ -20,6 +24,7 @@ class FireStoreHelper {
             likesCount: post['likes_count'],
             commentsCount: post['comments_count'],
             creatorName: post['creator_name'],
+            creatorId: post['creator_id'],
             creatorAvatar: post['creator_avatar']));
       }
       return {
@@ -49,6 +54,7 @@ class FireStoreHelper {
             body: post['body'],
             likesCount: post['likes_count'],
             commentsCount: post['comments_count'],
+            creatorId: post['creator_id'],
             creatorName: post['creator_name'],
             creatorAvatar: post['creator_avatar']));
       }
@@ -75,6 +81,7 @@ class FireStoreHelper {
         'created_at': FieldValue.serverTimestamp(),
         'creator_name': auth.currentUser!.displayName,
         'creator_avatar': auth.currentUser!.photoURL,
+        'creator_id': auth.currentUser!.uid
       });
       return Post(
           uid: data.id,
@@ -82,6 +89,7 @@ class FireStoreHelper {
           body: body,
           creatorName: auth.currentUser!.displayName!,
           creatorAvatar: auth.currentUser!.displayName!,
+          creatorId: auth.currentUser!.uid,
           likesCount: 0,
           commentsCount: 0);
     } catch (e) {
@@ -191,12 +199,12 @@ class FireStoreHelper {
   }
 
   Future<Map<String, dynamic>?> fetchInititalPostsByUser(
-      {required String username, required int amt}) async {
+      {required String userId, required int amt}) async {
     List<Post> posts = [];
     try {
       var queries = await _store
           .collection('posts')
-          .where('creator_name', isEqualTo: username)
+          .where('creator_id', isEqualTo: userId)
           .orderBy('created_at')
           .limit(amt)
           .get();
@@ -210,6 +218,7 @@ class FireStoreHelper {
               likesCount: post['likes_count'],
               commentsCount: post['comments_count'],
               creatorName: post['creator_name'],
+              creatorId: post['creator_id'],
               creatorAvatar: post['creator_avatar']),
         );
       }
@@ -226,14 +235,14 @@ class FireStoreHelper {
   }
 
   Future<Map<String, dynamic>?> fetchNextPostsByUser(
-      {required String username,
+      {required String userId,
       required DocumentSnapshot last_snapshot,
       required int amt}) async {
     List<Post> posts = [];
     try {
       var queries = await _store
           .collection('posts')
-          .where('creator_name', isEqualTo: username)
+          .where('creator_id', isEqualTo: userId)
           .orderBy('created_at')
           .startAfterDocument(last_snapshot)
           .limit(amt)
@@ -248,6 +257,7 @@ class FireStoreHelper {
               likesCount: post['likes_count'],
               commentsCount: post['comments_count'],
               creatorName: post['creator_name'],
+              creatorId: post['creator_id'],
               creatorAvatar: post['creator_avatar']),
         );
       }

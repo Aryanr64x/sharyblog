@@ -33,6 +33,8 @@ class PostCardHeader extends StatelessWidget {
                       Navigator.push(context, MaterialPageRoute(
                         builder: (BuildContext contexted) {
                           return ProfileScreen(
+                            userId:
+                                Provider.of<PostData>(context).post.creatorId,
                             userAvatar: Provider.of<PostData>(context)
                                 .post
                                 .creatorAvatar,

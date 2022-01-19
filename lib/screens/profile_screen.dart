@@ -15,8 +15,10 @@ class ProfileScreen extends StatefulWidget {
   static final String id = "profile_screen";
   String username;
   String? userAvatar;
+  String userId;
 
-  ProfileScreen({required this.username, required this.userAvatar});
+  ProfileScreen(
+      {required this.username, required this.userAvatar, required this.userId});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -73,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void fetchPosts(bool initial) async {
     if (initial) {
       var data = await FireStoreHelper()
-          .fetchInititalPostsByUser(username: widget.username, amt: 2);
+          .fetchInititalPostsByUser(userId: widget.userId, amt: 2);
       if (data != null) {
         last_snapshot = data['last_snapshot'];
 
@@ -90,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     } else {
       var data = await FireStoreHelper().fetchNextPostsByUser(
-          username: widget.username, last_snapshot: last_snapshot!, amt: 1);
+          userId: widget.userId, last_snapshot: last_snapshot!, amt: 1);
       if (data != null) {
         last_snapshot = data['last_snapshot'];
         setState(() {
