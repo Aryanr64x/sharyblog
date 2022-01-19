@@ -34,17 +34,19 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Post> posts = [];
   final double REFRESH_OFFEST = -70.8899663140498;
   late String username;
-  late String userAvatar;
+  late String? userAvatar;
 
   @override
   void initState() {
     // super.initState();
-    // username = auth.currentUser!.displayName!;
-    // userAvatar = auth.currentUser!.photoURL!;
-    print("HERE I GO PRINTING THE USERNAME ITS VISIBLE U BITCH " +
-        auth.currentUser!.displayName!);
     username = auth.currentUser!.displayName!;
-    userAvatar = auth.currentUser!.displayName!;
+    userAvatar = auth.currentUser!.photoURL;
+
+    if (auth.currentUser!.photoURL == null) {
+      print("BITCH THE PHOTO URL IS NULL");
+    } else {
+      print("BITCH THE PHOTO URL IS NOT NULL");
+    }
     fetchPosts(true);
     _pageController.addListener(listener);
   }

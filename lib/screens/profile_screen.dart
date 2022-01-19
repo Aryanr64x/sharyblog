@@ -14,7 +14,7 @@ import 'package:shary/widgets/profile_app_bar.dart';
 class ProfileScreen extends StatefulWidget {
   static final String id = "profile_screen";
   String username;
-  String userAvatar;
+  String? userAvatar;
 
   ProfileScreen({required this.username, required this.userAvatar});
 

@@ -7,7 +7,7 @@ class Post {
   int likesCount;
   int commentsCount;
   String creatorName;
-  String creatorAvatar;
+  String? creatorAvatar;
 
   Post({
     required this.uid,

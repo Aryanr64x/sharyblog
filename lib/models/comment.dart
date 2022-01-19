@@ -5,7 +5,7 @@ class Comment {
   String body;
 
   String creatorName;
-  String creatorAvatar;
+  String? creatorAvatar;
 
   Comment(
       {required this.uid,

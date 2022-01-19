@@ -43,6 +43,7 @@ dependencies:
   flutter_html: ^2.2.1
   fluttertoast: ^8.0.8
   provider: ^6.0.1
+  cached_network_image: ^3.2.0
 
 
 dev_dependencies:
@@ -71,6 +72,7 @@ flutter:
   assets:
     - images/logo.png
     - images/avatar.jpg
+    - images/sqaure.jpg
  
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -66,10 +66,8 @@ class _CommentsListState extends State<CommentsList> {
                     Map<String, dynamic> data =
                         document.data()! as Map<String, dynamic>;
                     return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage:
-                            DisplayPicture.display(data['creator_avatar']),
-                      ),
+                      leading:
+                          DisplayPicture.display(data['creator_avatar'], 20.0),
                       title: Text(data['creator_name']),
                       subtitle: Text(data['body']),
                     );

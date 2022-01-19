@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shary/display_picture.dart';
 import 'package:shary/post_data.dart';
 import 'package:shary/screens/profile_screen.dart';
+import 'package:shary/widgets/avatar.dart';
 
 class PostCardHeader extends StatelessWidget {
   @override
@@ -14,12 +16,8 @@ class PostCardHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: CircleAvatar(
-                minRadius: 30.0,
-                child: CircularProgressIndicator(),
-                backgroundImage: DisplayPicture.display(
-                    Provider.of<PostData>(context).post.creatorAvatar),
-              ),
+              child: DisplayPicture.display(
+                  Provider.of<PostData>(context).post.creatorAvatar, 50.0),
               flex: 2,
             ),
             SizedBox(

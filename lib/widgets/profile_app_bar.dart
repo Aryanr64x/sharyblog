@@ -1,10 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shary/display_picture.dart';
 
 class ProfileAppBar extends StatelessWidget {
   String username;
-  String userAvatar;
+  String? userAvatar;
   ProfileAppBar({required this.username, required this.userAvatar});
 
   @override
@@ -17,11 +18,9 @@ class ProfileAppBar extends StatelessWidget {
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: [StretchMode.fadeTitle],
         background: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            CircleAvatar(
-              radius: 75.0,
-              backgroundImage: DisplayPicture.display(userAvatar),
-            ),
+            DisplayPicture.display(userAvatar, 100.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

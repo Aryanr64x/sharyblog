@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:shary/dialog.dart';
 import 'package:shary/error.dart';
 import 'package:shary/firebase/firebase_storage_helper.dart';
 import 'package:shary/screens/home_screen.dart';
@@ -35,11 +36,12 @@ class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
         onPressed: () async {
           if (username != null && username != '') {
             print("This part has been reached");
+            showLoadingDialog(context);
             try {
               await auth.currentUser!.updateDisplayName(username);
               await _uploadAvatar();
-              Navigator.popAndPushNamed(context, HomeScreen.id);
             } catch (e) {
+              Navigator.pop(context);
               print(e);
               SharyToast.show(
                   "We are having problem updating your profile info. Please check your internet connection");
@@ -141,18 +143,28 @@ class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
       if (url != null) {
         try {
           await auth.currentUser!.updatePhotoURL(url);
+          Navigator.pop(context);
+          Navigator.popAndPushNamed(context, HomeScreen.id);
         } catch (e) {
+          Navigator.pop(context);
           print(e);
           SharyToast.show(
               "Sorry , We are having problem uploading picture at the moment !");
         }
       }
     } else {
-      try {
-        await auth.currentUser!.updatePhotoURL('');
-      } catch (e) {
-        print(e);
-      }
+      Navigator.pop(context);
+      Navigator.popAndPushNamed(context, HomeScreen.id);
     }
+  }
+
+  void showLoadingDialog(BuildContext context) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return SharyDialog.show("Hangup a moment!");
+      },
+    );
   }
 }
