@@ -39,24 +39,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // super.initState();
     username = auth.currentUser!.displayName!;
     userAvatar = auth.currentUser!.photoURL;
     userId = auth.currentUser!.uid;
 
-    if (auth.currentUser!.photoURL == null) {
-      print("BITCH THE PHOTO URL IS NULL");
-    } else {
-      print("BITCH THE PHOTO URL IS NOT NULL");
-    }
     fetchPosts(true);
     _pageController.addListener(listener);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
+          elevation: 0,
           title: Text("Shary"),
           backgroundColor: Theme.of(context).primaryColor,
           actions: [
@@ -204,16 +201,3 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 }
-
-
-// HomeAppBar(
-//           username: username,
-//           avatar: userAvatar,
-//           context: context,
-//           onNewPostAdded: (Post newPost) {
-//             setState(() {
-//               posts.insert(0, newPost);
-//             });
-//             _pageController.jumpTo(0);
-//           },
-//         ) as AppBar

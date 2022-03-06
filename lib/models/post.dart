@@ -9,6 +9,7 @@ class Post {
   String creatorName;
   String? creatorAvatar;
   String creatorId;
+  String createdAt;
 
   Post(
       {required this.uid,
@@ -18,5 +19,6 @@ class Post {
       required this.commentsCount,
       required this.creatorName,
       required this.creatorAvatar,
+      required this.createdAt,
       required this.creatorId});
 }

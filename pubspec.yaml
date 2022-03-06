@@ -43,6 +43,7 @@ dependencies:
   flutter_html: ^2.2.1
   fluttertoast: ^8.0.8
   provider: ^6.0.1
+  timeago: ^3.1.0
   cached_network_image: ^3.2.0
 
 

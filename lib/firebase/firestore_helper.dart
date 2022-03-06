@@ -2,11 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shary/models/comment.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:shary/models/post.dart';
 
 class FireStoreHelper {
   final FirebaseFirestore _store = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
+
   Future<Map<String, dynamic>?> getFirstPosts(int amt) async {
     try {
       List<Post> posts = [];
@@ -21,6 +23,7 @@ class FireStoreHelper {
             uid: post.id,
             title: post['title'],
             body: post['body'],
+            createdAt: timeago.format(post['created_at'].toDate()),
             likesCount: post['likes_count'],
             commentsCount: post['comments_count'],
             creatorName: post['creator_name'],
@@ -52,6 +55,7 @@ class FireStoreHelper {
             uid: post.id,
             title: post['title'],
             body: post['body'],
+            createdAt: timeago.format(post['created_at'].toDate()),
             likesCount: post['likes_count'],
             commentsCount: post['comments_count'],
             creatorId: post['creator_id'],
@@ -83,9 +87,11 @@ class FireStoreHelper {
         'creator_avatar': auth.currentUser!.photoURL,
         'creator_id': auth.currentUser!.uid
       });
+
       return Post(
           uid: data.id,
           title: title,
+          createdAt: "Just now",
           body: body,
           creatorName: auth.currentUser!.displayName!,
           creatorAvatar: auth.currentUser!.displayName!,
@@ -213,6 +219,7 @@ class FireStoreHelper {
         posts.add(
           Post(
               uid: post.id,
+              createdAt: timeago.format(post['created_at'].toDate()),
               title: post['title'],
               body: post['body'],
               likesCount: post['likes_count'],
@@ -251,6 +258,7 @@ class FireStoreHelper {
       for (var post in queries.docs) {
         posts.add(
           Post(
+              createdAt: timeago.format(post['created_at'].toDate()),
               uid: post.id,
               title: post['title'],
               body: post['body'],

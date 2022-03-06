@@ -14,60 +14,63 @@ class ProfileAppBar extends StatelessWidget {
       automaticallyImplyLeading: false,
       expandedHeight: 249.0,
       stretch: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).primaryColor,
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: [StretchMode.fadeTitle],
-        background: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            DisplayPicture.display(userAvatar, 100.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  username,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
-                  ),
-                ),
-                iconAsPerUser()
-              ],
-            ),
-            Row(
-              children: const [
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      "21 posts",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                    child: Center(
-                  child: Text(
-                    "789 followers",
+        background: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Column(
+            children: [
+              DisplayPicture.display(userAvatar, 75),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    username,
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )),
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      "75 follows",
-                      style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                        color: Colors.white),
+                  ),
+                  iconAsPerUser()
+                ],
+              ),
+              Row(
+                children: const [
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "21 posts",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
                   ),
-                ),
-              ],
-            )
-          ],
+                  Expanded(
+                      child: Center(
+                    child: Text(
+                      "789 followers",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "75 follows",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -78,13 +81,16 @@ class ProfileAppBar extends StatelessWidget {
       return IconButton(
           onPressed: () {},
           icon: Icon(
-            Icons.settings,
+            Icons.settings_rounded,
+            color: Colors.white,
           ));
     } else {
       return IconButton(
-        onPressed: () {},
-        icon: Icon(Icons.more_vert),
-      );
+          onPressed: () {},
+          icon: Icon(
+            Icons.more_horiz_rounded,
+            color: Colors.white,
+          ));
     }
   }
 }

@@ -16,8 +16,10 @@ class PostCardHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: DisplayPicture.display(
-                  Provider.of<PostData>(context).post.creatorAvatar, 50.0),
+              child: Center(
+                child: DisplayPicture.display(
+                    Provider.of<PostData>(context).post.creatorAvatar, 50.0),
+              ),
               flex: 2,
             ),
             SizedBox(
@@ -50,7 +52,7 @@ class PostCardHeader extends StatelessWidget {
                           fontWeight: FontWeight.bold, fontSize: 18.0),
                     ),
                   ),
-                  Text("2 hrs ago")
+                  Text(Provider.of<PostData>(context).post.createdAt)
                 ],
               ),
               flex: 8,

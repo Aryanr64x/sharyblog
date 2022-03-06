@@ -39,34 +39,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-          child: CustomScrollView(
-            controller: _controller,
-            slivers: [
-              ProfileAppBar(
-                userAvatar: widget.userAvatar,
-                username: widget.username,
-              ),
-              SliverFixedExtentList(
-                delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                  if (index == posts.length) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [progressIndicatorOrNothing()],
-                    );
-                  } else {
-                    return ChangeNotifierProvider<PostData>(
-                      create: (context) => PostData(posts[index]),
-                      child: PostCard(),
-                    );
-                  }
-                }, childCount: posts.length + 1),
-                itemExtent: 700.0,
-              )
-            ],
-          ),
+        body: CustomScrollView(
+          controller: _controller,
+          slivers: [
+            ProfileAppBar(
+              userAvatar: widget.userAvatar,
+              username: widget.username,
+            ),
+            SliverFixedExtentList(
+              delegate:
+                  SliverChildBuilderDelegate((BuildContext context, int index) {
+                if (index == posts.length) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [progressIndicatorOrNothing()],
+                  );
+                } else {
+                  return ChangeNotifierProvider<PostData>(
+                    create: (context) => PostData(posts[index]),
+                    child: PostCard(),
+                  );
+                }
+              }, childCount: posts.length + 1),
+              itemExtent: 700.0,
+            )
+          ],
         ),
       ),
     );

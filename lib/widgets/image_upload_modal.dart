@@ -17,8 +17,9 @@ class ImageUploadModal extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.image,
-              size: 60.0,
+              size: 60.0,  
             ),
+          
             color: Theme.of(context).primaryColor,
             onPressed: onGalleryTap,
           ),

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shary/post_data.dart';
@@ -6,7 +8,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 class DisplayPicture {
   static Widget display(String? url, double radius) {
     if (url == null) {
-      print("THE URL IS EMPTY");
       return Container(
         height: radius,
         width: radius,
@@ -17,21 +18,14 @@ class DisplayPicture {
     } else {
       return CachedNetworkImage(
         imageBuilder: (context, imageProvider) {
-          return Container(
-            height: radius,
-            width: radius,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(image: imageProvider)),
+          return CircleAvatar(
+            backgroundImage: imageProvider,
+            radius: radius,
           );
         },
         imageUrl: url,
         placeholder: (context, url) {
-          return Container(
-            height: 40.0,
-            width: 40.0,
-            child: const CircularProgressIndicator(),
-          );
+          return CircularProgressIndicator();
         },
       );
     }
