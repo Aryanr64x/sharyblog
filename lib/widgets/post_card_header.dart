@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shary/display_picture.dart';
+import 'package:shary/models/post.dart';
+import 'package:shary/models/shary_user.dart';
 import 'package:shary/post_data.dart';
 import 'package:shary/screens/profile_screen.dart';
 import 'package:shary/widgets/avatar.dart';
@@ -9,6 +11,8 @@ import 'package:shary/widgets/avatar.dart';
 class PostCardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Post post = Provider.of<PostData>(context).post;
+
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(10.0),
@@ -17,8 +21,7 @@ class PostCardHeader extends StatelessWidget {
           children: [
             Expanded(
               child: Center(
-                child: DisplayPicture.display(
-                    Provider.of<PostData>(context).post.creatorAvatar, 50.0),
+                child: DisplayPicture.display(post.creatorAvatar, 50.0),
               ),
               flex: 2,
             ),
@@ -34,25 +37,20 @@ class PostCardHeader extends StatelessWidget {
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(
                         builder: (BuildContext contexted) {
-                          return ProfileScreen(
-                            userId:
-                                Provider.of<PostData>(context).post.creatorId,
-                            userAvatar: Provider.of<PostData>(context)
-                                .post
-                                .creatorAvatar,
-                            username:
-                                Provider.of<PostData>(context).post.creatorName,
-                          );
+                          return ProfileScreen(SharyUser(
+                              id: post.creatorId,
+                              username: post.creatorName,
+                              userAvatar: post.creatorAvatar));
                         },
                       ));
                     },
                     child: Text(
-                      Provider.of<PostData>(context).post.creatorName,
+                      post.creatorName,
                       style: TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 18.0),
                     ),
                   ),
-                  Text(Provider.of<PostData>(context).post.createdAt)
+                  Text(post.createdAt)
                 ],
               ),
               flex: 8,

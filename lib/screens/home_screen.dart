@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/post.dart';
+import 'package:shary/models/shary_user.dart';
 import 'package:shary/post_data.dart';
 import 'package:shary/screens/new_post_screen.dart';
 import 'package:shary/screens/profile_screen.dart';
@@ -79,10 +80,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (BuildContext context) {
-                    return ProfileScreen(
-                        userAvatar: userAvatar,
-                        username: username,
-                        userId: userId);
+                    return ProfileScreen(SharyUser(
+                        id: auth.currentUser!.uid,
+                        username: auth.currentUser!.displayName!,
+                        userAvatar: auth.currentUser!.photoURL!));
                   }));
                 },
               ),

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shary/display_picture.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/post.dart';
+import 'package:shary/models/shary_user.dart';
 import 'package:shary/post_data.dart';
 import 'package:shary/shary_toast.dart';
 import 'package:shary/widgets/post_card_widget.dart';
@@ -13,13 +14,9 @@ import 'package:shary/widgets/profile_app_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
   static final String id = "profile_screen";
-  String username;
-  String? userAvatar;
-  String userId;
+  SharyUser profileUser;
 
-  ProfileScreen(
-      {required this.username, required this.userAvatar, required this.userId});
-
+  ProfileScreen(this.profileUser);
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -33,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     fetchPosts(true);
     _controller.addListener(listener);
+    super.initState();
   }
 
   @override
@@ -43,21 +41,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
           controller: _controller,
           slivers: [
             ProfileAppBar(
-              userAvatar: widget.userAvatar,
-              username: widget.username,
+              profileUser: widget.profileUser,
             ),
             SliverFixedExtentList(
               delegate:
                   SliverChildBuilderDelegate((BuildContext context, int index) {
                 if (index == posts.length) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [progressIndicatorOrNothing()],
+                  return Center(
+                    child: progressIndicatorOrNothing(),
                   );
                 } else {
                   return ChangeNotifierProvider<PostData>(
                     create: (context) => PostData(posts[index]),
-                    child: PostCard(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      child: PostCard(),
+                    ),
                   );
                 }
               }, childCount: posts.length + 1),
@@ -72,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void fetchPosts(bool initial) async {
     if (initial) {
       var data = await FireStoreHelper()
-          .fetchInititalPostsByUser(userId: widget.userId, amt: 2);
+          .fetchInititalPostsByUser(userId: widget.profileUser.id, amt: 2);
       if (data != null) {
         last_snapshot = data['last_snapshot'];
 
@@ -89,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     } else {
       var data = await FireStoreHelper().fetchNextPostsByUser(
-          userId: widget.userId, last_snapshot: last_snapshot!, amt: 1);
+          userId: widget.profileUser.id, last_snapshot: last_snapshot!, amt: 1);
       if (data != null) {
         last_snapshot = data['last_snapshot'];
         setState(() {

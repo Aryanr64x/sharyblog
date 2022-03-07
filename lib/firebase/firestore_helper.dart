@@ -237,6 +237,7 @@ class FireStoreHelper {
         'last_snapshot': (queries.docs.isEmpty) ? null : queries.docs.last,
       };
     } on FirebaseException catch (e) {
+      print("HERE GOES THE ERROR");
       print(e);
     }
   }

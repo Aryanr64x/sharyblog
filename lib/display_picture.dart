@@ -8,12 +8,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 class DisplayPicture {
   static Widget display(String? url, double radius) {
     if (url == null) {
-      return Container(
-        height: radius,
-        width: radius,
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(image: AssetImage('images/avatar.jpg'))),
+      return CircleAvatar(
+        radius: radius,
+        backgroundImage: AssetImage('images/avatar.jpg'),
       );
     } else {
       return CachedNetworkImage(

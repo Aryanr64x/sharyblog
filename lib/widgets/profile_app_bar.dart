@@ -1,12 +1,14 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shary/display_picture.dart';
+import 'package:shary/models/shary_user.dart';
 
 class ProfileAppBar extends StatelessWidget {
-  String username;
-  String? userAvatar;
-  ProfileAppBar({required this.username, required this.userAvatar});
+  SharyUser profileUser;
+  ProfileAppBar({required this.profileUser});
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +23,12 @@ class ProfileAppBar extends StatelessWidget {
           padding: const EdgeInsets.only(top: 20),
           child: Column(
             children: [
-              DisplayPicture.display(userAvatar, 75),
+              DisplayPicture.display(profileUser.userAvatar, 75),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    username,
+                    profileUser.username,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0,
@@ -77,7 +79,7 @@ class ProfileAppBar extends StatelessWidget {
   }
 
   Widget iconAsPerUser() {
-    if ("username" == FirebaseAuth.instance.currentUser!.displayName) {
+    if (profileUser.id == FirebaseAuth.instance.currentUser!.uid) {
       return IconButton(
           onPressed: () {},
           icon: Icon(

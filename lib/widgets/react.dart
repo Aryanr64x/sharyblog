@@ -56,24 +56,17 @@ class _ReactPanelState extends State<ReactPanel> {
       if (isLiked!) {
         return IconButton(
           onPressed: () {
-            setState(() {
-              isLoading = true;
-            });
             likeOrUnlike();
           },
-          icon: Icon(Icons.thumb_down),
+          icon: Icon(Icons.favorite_rounded),
           color: Theme.of(context).primaryColor,
         );
       } else {
         return IconButton(
           onPressed: () {
-            setState(() {
-              isLoading = true;
-            });
-
             likeOrUnlike();
           },
-          icon: Icon(Icons.thumb_up),
+          icon: Icon(Icons.favorite_border_rounded),
           color: Theme.of(context).primaryColor,
         );
       }
@@ -81,33 +74,35 @@ class _ReactPanelState extends State<ReactPanel> {
   }
 
   void likeOrUnlike() async {
+    Post post = Provider.of<PostData>(context, listen: false).post;
     if (isLiked!) {
-      var isSuccessful = await storeHelper.dislike(
-          Provider.of<PostData>(context, listen: false).post.uid,
-          Provider.of<PostData>(context, listen: false).post.likesCount);
-      isLoading = false;
-      if (isSuccessful) {
-        setState(() {
-          isLiked = false;
-        });
+      setState(() {
+        isLiked = false;
         Provider.of<PostData>(context, listen: false).decreaseLikesCount();
-      } else {
+      });
+      var isSuccessful = await storeHelper.dislike(post.uid, post.likesCount);
+
+      if (!isSuccessful) {
         SharyToast.show(
             "We cannot complete that action currently . Please check your internet connection and try again");
-      }
-    } else {
-      var isSuccessful = await storeHelper.like(
-          Provider.of<PostData>(context, listen: false).post.uid,
-          Provider.of<PostData>(context, listen: false).post.likesCount);
-      isLoading = false;
-      if (isSuccessful) {
         setState(() {
           isLiked = true;
+          Provider.of<PostData>(context, listen: false).increaseLikesCount();
         });
+      }
+    } else {
+      setState(() {
+        isLiked = true;
         Provider.of<PostData>(context, listen: false).increaseLikesCount();
-      } else {
+      });
+      var isSuccessful = await storeHelper.like(post.uid, post.likesCount);
+      if (!isSuccessful) {
         SharyToast.show(
             "We are having trouble connecting to the internet . Please try again later");
+        setState(() {
+          isLiked = false;
+          Provider.of<PostData>(context, listen: false).decreaseLikesCount();
+        });
       }
     }
   }
