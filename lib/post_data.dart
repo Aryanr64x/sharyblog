@@ -15,8 +15,8 @@ class PostData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void increamentCommentsCount() {
-    post.commentsCount++;
+  void setCommentsCount(int newCommentsCount) {
+    post.commentsCount = newCommentsCount;
     notifyListeners();
   }
 }
