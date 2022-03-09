@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shary/models/comment.dart';
+import 'package:shary/models/shary_user.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:shary/models/post.dart';
 
@@ -159,10 +160,14 @@ class FireStoreHelper {
 
   Future<Comment?> addComment(
       String postId, String body, int commentsCount) async {
+    String authUserId = auth.currentUser!.uid;
+    String authUsername = auth.currentUser!.displayName!;
+    String? authUserAvatar = auth.currentUser!.photoURL!;
     try {
       var docref = _store.collection('posts').doc(postId);
       var commentref = await docref.collection('comments').add({
         'body': body,
+        'creator_id': auth.currentUser!.uid,
         'creator_name': auth.currentUser!.displayName,
         'creator_avatar': auth.currentUser!.photoURL,
         'created_at': FieldValue.serverTimestamp()
@@ -170,35 +175,12 @@ class FireStoreHelper {
       await docref.update({'comments_count': commentsCount + 1});
       print("The update is successful");
       return Comment(
-          uid: commentref.id,
-          body: body,
-          creatorName: auth.currentUser!.displayName!,
-          creatorAvatar: auth.currentUser!.photoURL!);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<List<Comment>?> fetchComments(String postId) async {
-    List<Comment> comments = [];
-    try {
-      var queries = await _store
-          .collection('posts')
-          .doc(postId)
-          .collection('comments')
-          .get();
-
-      for (var comment_data in queries.docs) {
-        comments.add(
-          Comment(
-            uid: comment_data.id,
-            body: comment_data['body'],
-            creatorName: comment_data['creator_name'],
-            creatorAvatar: comment_data['creator_avatar'],
-          ),
-        );
-      }
-      return comments;
+        createdAt: 'Just now',
+        uid: commentref.id,
+        body: body,
+        creator: SharyUser(
+            id: authUserId, userAvatar: authUserAvatar, username: authUsername),
+      );
     } catch (e) {
       print(e);
     }

@@ -5,6 +5,8 @@ import 'package:shary/widgets/post_card_body.dart';
 import 'package:shary/widgets/post_card_footer.dart';
 
 class PostCard extends StatelessWidget {
+  const PostCard({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -119,7 +119,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else {
                   return ChangeNotifierProvider<PostData>(
                     create: (context) => PostData(posts[index]),
-                    child: PostCard(),
+                    child: PostCard(
+                      key: Key(posts[index].uid),
+                    ),
                   );
                 }
               },
@@ -133,13 +135,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (_pageController.position.pixels ==
         _pageController.position.maxScrollExtent) {
-      print(
-          "We have reached the max scroll extent now go and fetch more posts");
-
       fetchPosts(false);
     } else if (_pageController.position.pixels < REFRESH_OFFEST) {
       if (!isRefreshing) {
-        print("Its time to refresh");
         setState(() {
           isRefreshing = true;
         });
@@ -147,8 +145,6 @@ class _HomeScreenState extends State<HomeScreen> {
         fetchPosts(true);
       }
     }
-    print(_pageController.position.axis.index);
-    print(_pageController.position.pixels);
   }
 
   void fetchPosts(bool initial) async {

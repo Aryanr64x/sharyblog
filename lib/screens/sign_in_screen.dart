@@ -100,6 +100,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                   await auth.signInWithEmailAndPassword(
                                       email: email!, password: password!);
                               if (user != null) {
+                                // First pop is to pop the dialog
+                                Navigator.pop(context);
                                 Navigator.popAndPushNamed(
                                     context, HomeScreen.id);
                               }

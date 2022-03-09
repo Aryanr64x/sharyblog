@@ -9,6 +9,7 @@ import 'package:shary/widgets/primary_button_widget.dart';
 class CommentScreen extends StatelessWidget {
   String postId;
   int commentsCount;
+  final ScrollController _commentsController = ScrollController();
   CommentScreen({required this.postId, required this.commentsCount});
 
   static const String id = 'comment_screen';
@@ -29,8 +30,7 @@ class CommentScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: CommentsList(
-                  postId: postId,
-                ),
+                    postId: postId, controller: _commentsController),
                 flex: 8,
               ),
               Expanded(
@@ -64,6 +64,7 @@ class CommentScreen extends StatelessWidget {
                             ),
                             onPressed: () async {
                               if (comment != null && comment != '') {
+                                _commentsController.jumpTo(0);
                                 var newComment = await FireStoreHelper()
                                     .addComment(
                                         postId, comment!, commentsCount);

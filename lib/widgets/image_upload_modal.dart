@@ -6,6 +6,7 @@ class ImageUploadModal extends StatelessWidget {
   VoidCallback onCameraTap;
   VoidCallback onGalleryTap;
   ImageUploadModal({required this.onCameraTap, required this.onGalleryTap});
+  
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class ImageUploadModal extends StatelessWidget {
               Icons.image,
               size: 60.0,  
             ),
-          
+
             color: Theme.of(context).primaryColor,
             onPressed: onGalleryTap,
           ),

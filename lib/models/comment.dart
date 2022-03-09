@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:shary/models/shary_user.dart';
 
 class Comment {
   String uid;
   String body;
-
-  String creatorName;
-  String? creatorAvatar;
+  SharyUser creator;
+  String createdAt;
 
   Comment(
       {required this.uid,
       required this.body,
-      required this.creatorName,
-      required this.creatorAvatar});
+      required this.creator,
+      required this.createdAt});
 }
