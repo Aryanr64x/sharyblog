@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return ProfileScreen(SharyUser(
                         id: auth.currentUser!.uid,
                         username: auth.currentUser!.displayName!,
-                        userAvatar: auth.currentUser!.photoURL!));
+                        userAvatar: auth.currentUser!.photoURL));
                   }));
                 },
               ),
@@ -114,7 +114,9 @@ class _HomeScreenState extends State<HomeScreen> {
               itemBuilder: (BuildContext context, int index) {
                 if (index == posts.length) {
                   return Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).primaryColor,
+                    ),
                   );
                 } else {
                   return ChangeNotifierProvider<PostData>(

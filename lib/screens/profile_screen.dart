@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shary/display_picture.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/post.dart';
+import 'package:shary/models/profile.dart';
 import 'package:shary/models/shary_user.dart';
 import 'package:shary/post_data.dart';
 import 'package:shary/shary_toast.dart';
@@ -24,11 +25,16 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final ScrollController _controller = ScrollController();
   QueryDocumentSnapshot? last_snapshot;
-  bool noPost = false;
+  bool postsLoaded = false;
   List<Post> posts = [];
+  Profile? profile;
+  bool? isFollowing;
+  final FireStoreHelper _storeHelper = FireStoreHelper();
+
   @override
   void initState() {
     fetchPosts(true);
+    fetchProfile();
     _controller.addListener(listener);
     super.initState();
   }
@@ -37,50 +43,68 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: CustomScrollView(
-          controller: _controller,
-          slivers: [
-            ProfileAppBar(
-              profileUser: widget.profileUser,
-            ),
-            SliverFixedExtentList(
-              delegate:
-                  SliverChildBuilderDelegate((BuildContext context, int index) {
-                if (index == posts.length) {
-                  return Center(
-                    child: progressIndicatorOrNothing(),
-                  );
-                } else {
-                  return ChangeNotifierProvider<PostData>(
-                    create: (context) => PostData(posts[index]),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
-                      child: PostCard(),
-                    ),
-                  );
-                }
-              }, childCount: posts.length + 1),
-              itemExtent: 700.0,
-            )
-          ],
-        ),
+        body: (profile != null && postsLoaded && isFollowing != null)
+            ? CustomScrollView(
+                controller: _controller,
+                slivers: [
+                  ProfileAppBar(
+                      profile: profile!,
+                      profileUser: widget.profileUser,
+                      isFollowing: isFollowing!),
+                  SliverFixedExtentList(
+                    delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                      if (index == posts.length) {
+                        return Center(
+                          child: _indicatorOrText(),
+                        );
+                      } else {
+                        return ChangeNotifierProvider<PostData>(
+                          create: (context) => PostData(posts[index]),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            child: PostCard(),
+                          ),
+                        );
+                      }
+                    }, childCount: posts.length + 1),
+                    itemExtent: 700.0,
+                  )
+                ],
+              )
+            : Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
       ),
     );
   }
 
+  void fetchProfile() async {
+    var data = await _storeHelper.fetchProfile(widget.profileUser.id);
+    if (data != null) {
+      setState(() {
+        profile = data;
+      });
+      // Call only after profile is loaded successfully
+      fetchFollowStatus();
+    } else {
+      SharyToast.show("Oops SOMETHING went wrong . please try again later");
+    }
+  }
+
   void fetchPosts(bool initial) async {
     if (initial) {
-      var data = await FireStoreHelper()
-          .fetchInititalPostsByUser(userId: widget.profileUser.id, amt: 2);
+      var data = await _storeHelper.fetchInititalPostsByUser(
+          userId: widget.profileUser.id, amt: 2);
       if (data != null) {
         last_snapshot = data['last_snapshot'];
 
         setState(() {
           posts = data['posts'];
-          if (posts.isEmpty) {
-            noPost = true;
-          }
+          postsLoaded = true;
         });
       } else {
         // show error for not getting the posts most prolly due to internet connection
@@ -88,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             "We encountered a problem. cannot get posts anymore :(");
       }
     } else {
-      var data = await FireStoreHelper().fetchNextPostsByUser(
+      var data = await _storeHelper.fetchNextPostsByUser(
           userId: widget.profileUser.id, last_snapshot: last_snapshot!, amt: 1);
       if (data != null) {
         last_snapshot = data['last_snapshot'];
@@ -97,9 +121,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
       } else {
         // show error for not getting posts most prolly due to internet connection
-        SharyToast.show("Dude get your internet connection right!");
+        SharyToast.show(
+            "Either your internet is down or there are no posts to show anymore");
       }
     }
+  }
+
+  fetchFollowStatus() async {
+    bool? followStatus = await _storeHelper.isFollowing(profile!.profileId);
+    if (followStatus != null) {
+      setState(() {
+        isFollowing = followStatus;
+      });
+    }
+    // No writing else for this .error will be shown by other widgets on internet failure!!!!
   }
 
   void listener() {
@@ -108,11 +143,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Widget progressIndicatorOrNothing() {
-    if (noPost) {
-      return Text("Dude has not posted even a single shit yo");
+  Widget _indicatorOrText() {
+    if (posts.isEmpty) {
+      return Text("Dude has no posts yet!");
     } else {
-      return CircularProgressIndicator();
+      return CircularProgressIndicator(
+        color: Theme.of(context).primaryColor,
+      );
     }
   }
 }

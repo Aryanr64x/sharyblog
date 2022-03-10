@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shary/dialog.dart';
 import 'package:shary/error.dart';
+import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/screens/home_screen.dart';
 import 'package:shary/screens/sign_in_screen.dart';
 import 'package:shary/screens/sign_up_transition_screen.dart';
@@ -92,23 +93,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    AppPrimaryButton(
-                        title: "SignUp",
-                        onTap: () async {
-                          if (_formkey.currentState!.validate()) {
-                            showLoaderDialog(context);
-                            try {
-                              await firebaseAuth.createUserWithEmailAndPassword(
-                                  email: email!, password: password!);
-                              Navigator.popAndPushNamed(
-                                  context, SignUpTransitionScreen.id);
-                            } on FirebaseException catch (e) {
-                              Navigator.pop(context);
-                              print("HERE GOES TEH ERROR CODE" + e.code);
-                              Error.show(e);
-                            }
-                          }
-                        }),
+                    AppPrimaryButton(title: "SignUp", onTap: _signUp),
                     TextButton(
                         onPressed: () {
                           Navigator.popAndPushNamed(context, SignInScreen.id);
@@ -122,6 +107,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
     );
+  }
+
+  void _signUp() async {
+    if (_formkey.currentState!.validate()) {
+      showLoaderDialog(context);
+      try {
+        UserCredential user = await firebaseAuth.createUserWithEmailAndPassword(
+            email: email!, password: password!);
+        await FireStoreHelper().createProfile(user.user!.uid);
+        Navigator.popAndPushNamed(context, SignUpTransitionScreen.id);
+      } on FirebaseException catch (e) {
+        Navigator.pop(context);
+        Error.show(e);
+      }
+    }
   }
 
   showLoaderDialog(BuildContext context) {

@@ -33,26 +33,7 @@ class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          if (username != null && username != '') {
-            print("This part has been reached");
-            showLoadingDialog(context);
-            try {
-              await auth.currentUser!.updateDisplayName(username);
-              await _uploadAvatar();
-            } catch (e) {
-              Navigator.pop(context);
-              print(e);
-              SharyToast.show(
-                  "We are having problem updating your profile info. Please check your internet connection");
-            }
-          } else {
-            SharyToast.show(
-                "Please enter a username atleast to continue with :)");
-          }
-
-          print("tHIS PART HAS ALSO BEEN REACHED");
-        },
+        onPressed: handleActionpress,
         backgroundColor: Theme.of(context).primaryColor,
         child: Icon(Icons.arrow_forward),
       ),
@@ -112,12 +93,31 @@ class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
     );
   }
 
+  void handleActionpress() async {
+    if (username != null && username != '') {
+      print("This part has been reached");
+      showLoadingDialog(context);
+      try {
+        await auth.currentUser!.updateDisplayName(username);
+        await _uploadAvatar();
+      } catch (e) {
+        Navigator.pop(context);
+        print(e);
+        SharyToast.show(
+            "We are having problem updating your profile info. Please check your internet connection");
+      }
+    } else {
+      SharyToast.show("Please enter a username atleast to continue with :)");
+    }
+
+    print("tHIS PART HAS ALSO BEEN REACHED");
+  }
+
   void _pickImage(ImageSource source) async {
     final XFile? image = await _picker.pickImage(source: source);
     file = File(image!.path);
     setState(() {
       imageWidget = Image.file(file!);
-      // imageWidget = Image.memory(bytes);
     });
   }
 

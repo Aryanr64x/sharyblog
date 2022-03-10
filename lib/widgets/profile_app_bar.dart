@@ -4,17 +4,38 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shary/display_picture.dart';
+import 'package:shary/models/profile.dart';
 import 'package:shary/models/shary_user.dart';
+import 'package:shary/screens/connection_screen.dart';
+import 'package:shary/widgets/follow_unfollow.dart';
 
-class ProfileAppBar extends StatelessWidget {
+class ProfileAppBar extends StatefulWidget {
   SharyUser profileUser;
-  ProfileAppBar({required this.profileUser});
+  Profile profile;
+  bool isFollowing;
+  ProfileAppBar(
+      {required this.profileUser,
+      required this.profile,
+      required this.isFollowing});
+
+  @override
+  State<ProfileAppBar> createState() => _ProfileAppBarState();
+}
+
+class _ProfileAppBarState extends State<ProfileAppBar> {
+  late int _followersCount;
+
+  @override
+  void initState() {
+    _followersCount = widget.profile.followersCount;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
       automaticallyImplyLeading: false,
-      expandedHeight: 249.0,
+      expandedHeight: 250.0,
       stretch: true,
       backgroundColor: Theme.of(context).primaryColor,
       flexibleSpace: FlexibleSpaceBar(
@@ -23,12 +44,35 @@ class ProfileAppBar extends StatelessWidget {
           padding: const EdgeInsets.only(top: 20),
           child: Column(
             children: [
-              DisplayPicture.display(profileUser.userAvatar, 75),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Container(),
+                    flex: 1,
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Center(
+                        child: DisplayPicture.display(
+                            widget.profileUser.userAvatar, 75)),
+                  ),
+                  Expanded(
+                    child: FollowUnfollow(
+                        profileUser: widget.profileUser,
+                        isFollowing: widget.isFollowing,
+                        onFollowUnfollow: (bool follow) {
+                          _onFollowOrUnFollow(follow);
+                        }),
+                  ),
+                ],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    profileUser.username,
+                    widget.profileUser.username,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0,
@@ -38,11 +82,11 @@ class ProfileAppBar extends StatelessWidget {
                 ],
               ),
               Row(
-                children: const [
+                children: [
                   Expanded(
                     child: Center(
                       child: Text(
-                        "21 posts",
+                        widget.profile.postsCount.toString() + " posts",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.white),
                       ),
@@ -50,21 +94,44 @@ class ProfileAppBar extends StatelessWidget {
                   ),
                   Expanded(
                       child: Center(
-                    child: Text(
-                      "789 followers",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        minimumSize: Size.zero,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () {
+                        _goToConnectionScreen(true);
+                      },
+                      child: Text(
+                        _followersCount.toString() + " followers",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   )),
                   Expanded(
                     child: Center(
-                      child: Text(
-                        "75 follows",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          minimumSize: Size.zero,
+                          padding:
+                              EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        onPressed: () {
+                          _goToConnectionScreen(false);
+                        },
+                        child: Text(
+                          widget.profile.followingsCount.toString() +
+                              " following",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -79,7 +146,7 @@ class ProfileAppBar extends StatelessWidget {
   }
 
   Widget iconAsPerUser() {
-    if (profileUser.id == FirebaseAuth.instance.currentUser!.uid) {
+    if (widget.profileUser.id == FirebaseAuth.instance.currentUser!.uid) {
       return IconButton(
           onPressed: () {},
           icon: Icon(
@@ -94,5 +161,24 @@ class ProfileAppBar extends StatelessWidget {
             color: Colors.white,
           ));
     }
+  }
+
+  void _onFollowOrUnFollow(bool follow) {
+    if (follow) {
+      setState(() {
+        _followersCount++;
+      });
+    } else {
+      setState(() {
+        _followersCount--;
+      });
+    }
+  }
+
+  void _goToConnectionScreen(bool areFollower) {
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+      return ConnectionScreen(
+          profileId: widget.profile.profileId, areFollowers: areFollower);
+    }));
   }
 }

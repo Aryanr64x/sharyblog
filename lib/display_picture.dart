@@ -22,7 +22,9 @@ class DisplayPicture {
         },
         imageUrl: url,
         placeholder: (context, url) {
-          return CircularProgressIndicator();
+          return CircularProgressIndicator(
+            color: Theme.of(context).primaryColor,
+          );
         },
       );
     }

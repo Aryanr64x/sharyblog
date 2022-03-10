@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -45,16 +47,13 @@ class NewPostScreen extends StatelessWidget {
                   ),
                   HtmlEditor(
                     callbacks: Callbacks(onChangeContent: (value) {
-                      print(value);
                       _body = value;
                     }),
                     controller: HtmlEditorController(), //required
                     htmlEditorOptions: HtmlEditorOptions(
                       hint: "Your text here. n  ..",
+
                       //initalText: "text content initial, if any",
-                    ),
-                    otherOptions: OtherOptions(
-                      height: 400,
                     ),
                   ),
                   AppPrimaryButton(

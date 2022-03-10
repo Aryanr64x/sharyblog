@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shary/models/comment.dart';
+import 'package:shary/models/profile.dart';
 import 'package:shary/models/shary_user.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:shary/models/post.dart';
@@ -256,6 +257,176 @@ class FireStoreHelper {
         'posts': posts,
         'last_snapshot': queries.docs.last,
       };
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  // Profile related requests
+  Future<void> createProfile(String userId) async {
+    await _store.collection('profiles').add({
+      'user_id': userId,
+      'followers_count': 0,
+      'followings_count': 0,
+      'posts_count': 0
+    });
+  }
+
+  Future<Profile?> fetchProfile(String userId) async {
+    try {
+      var querySnap = await _store
+          .collection('profiles')
+          .where('user_id', isEqualTo: userId)
+          .get();
+      var docQuerySnap = querySnap.docs.last;
+
+      return Profile(
+          profileId: docQuerySnap.id,
+          followersCount: docQuerySnap['followers_count'],
+          followingsCount: docQuerySnap['followings_count'],
+          postsCount: docQuerySnap['posts_count']);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<bool> follow(String followed_id, String followed_username,
+      String? followed_avatar) async {
+    print("THE CODE HAS BEEN PRINTED BELOW");
+    print(followed_id);
+    try {
+      var collRef = _store.collection('profiles');
+      var data = await collRef.where('user_id', isEqualTo: followed_id).get();
+      await collRef.doc(data.docs.last.id).update(
+        {
+          'followers_count': data.docs.last['followers_count'] + 1,
+        },
+      );
+      await collRef.doc(data.docs.last.id).collection('followers').add({
+        'user_id': auth.currentUser!.uid,
+        'username': auth.currentUser!.displayName,
+        'avatar': auth.currentUser!.photoURL
+      });
+
+      var data2 = await collRef
+          .where('user_id', isEqualTo: auth.currentUser!.uid)
+          .get();
+
+      await collRef.doc(data2.docs.last.id).update(
+        {
+          'followings_count': data2.docs.last['followings_count'] + 1,
+        },
+      );
+      await collRef.doc(data2.docs.last.id).collection('followings').add({
+        'user_id': followed_id,
+        'username': followed_username,
+        'avatar': followed_avatar
+      });
+
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> unfollow(String followed_id, String followed_username,
+      String? followed_avatar) async {
+    try {
+      var collRef = _store.collection('profiles');
+      var data = await collRef.where('user_id', isEqualTo: followed_id).get();
+      var followerRef = collRef.doc(data.docs.last.id).collection('followers');
+      var follower = await followerRef
+          .where('user_id', isEqualTo: auth.currentUser!.uid)
+          .get();
+      await followerRef.doc(follower.docs.last.id).delete();
+      await collRef.doc(data.docs.last.id).update(
+        {
+          'followers_count': data.docs.last['followers_count'] - 1,
+        },
+      );
+
+      var data2 = await collRef
+          .where('user_id', isEqualTo: auth.currentUser!.uid)
+          .get();
+      var followingRef =
+          collRef.doc(data2.docs.last.id).collection('followings');
+      var following =
+          await followingRef.where('user_id', isEqualTo: followed_id).get();
+      await followingRef.doc(following.docs.last.id).delete();
+      await collRef.doc(data2.docs.last.id).update(
+        {
+          'followings_count': data2.docs.last['followings_count'] - 1,
+        },
+      );
+
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool?> isFollowing(String profileId) async {
+    try {
+      var querySnap = await _store
+          .collection('profiles')
+          .doc(profileId)
+          .collection('followers')
+          .where('user_id', isEqualTo: auth.currentUser!.uid)
+          .get();
+
+      if (querySnap.docs.isEmpty) {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  // Grab all the followers of the given user id
+  Future<List<SharyUser>?> getFollowers(String profileId) async {
+    try {
+      List<SharyUser> followers = [];
+      var data = await _store
+          .collection('profiles')
+          .doc(profileId)
+          .collection('followers')
+          .get();
+
+      for (var follower in data.docs) {
+        followers.add(SharyUser(
+            id: follower['user_id'],
+            username: follower['username'],
+            userAvatar: follower['avatar']));
+      }
+      return followers;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  // Grab all the followings of the  user
+  Future<List<SharyUser>?> getFollowings(String profileId) async {
+    try {
+      List<SharyUser> followings = [];
+      var data = await _store
+          .collection('profiles')
+          .doc(profileId)
+          .collection('followings')
+          .get();
+      for (var following in data.docs) {
+        followings.add(
+          SharyUser(
+            id: following['user_id'],
+            username: following['username'],
+            userAvatar: following['avatar'],
+          ),
+        );
+      }
+      return followings;
     } catch (e) {
       print(e);
     }
