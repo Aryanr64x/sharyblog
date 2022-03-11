@@ -116,6 +116,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         UserCredential user = await firebaseAuth.createUserWithEmailAndPassword(
             email: email!, password: password!);
         await FireStoreHelper().createProfile(user.user!.uid);
+        Navigator.pop(context);
         Navigator.popAndPushNamed(context, SignUpTransitionScreen.id);
       } on FirebaseException catch (e) {
         Navigator.pop(context);

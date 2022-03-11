@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -12,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shary/widgets/image_upload_modal.dart';
 import 'package:shary/constants.dart';
+import 'package:http/http.dart' as http;
 
 class SignUpTransitionScreen extends StatefulWidget {
   static final String id = 'sign_up_transition';
@@ -95,22 +97,37 @@ class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
 
   void handleActionpress() async {
     if (username != null && username != '') {
-      print("This part has been reached");
       showLoadingDialog(context);
       try {
         await auth.currentUser!.updateDisplayName(username);
-        await _uploadAvatar();
+        // The below method has a nested try catch
+
       } catch (e) {
-        Navigator.pop(context);
+        _closeDialogAndShowError();
         print(e);
-        SharyToast.show(
-            "We are having problem updating your profile info. Please check your internet connection");
+      }
+      if (file != null) {
+        await _uploadAvatar();
+      }
+      var response = await http.post(
+        Uri.parse(
+            'https://3eb9-2405-201-a409-c198-814-c00d-6580-2247.ngrok.io/'),
+        body: json.encode({
+          'username': username,
+          'user_avatar': auth.currentUser!.photoURL,
+          'id': auth.currentUser!.uid
+        }),
+        headers: {"Content-Type": "application/json"},
+      );
+      if (response.statusCode == 200) {
+        Navigator.of(context, rootNavigator: true).pop();
+        Navigator.popAndPushNamed(context, HomeScreen.id);
+      } else {
+        _closeDialogAndShowError();
       }
     } else {
       SharyToast.show("Please enter a username atleast to continue with :)");
     }
-
-    print("tHIS PART HAS ALSO BEEN REACHED");
   }
 
   void _pickImage(ImageSource source) async {
@@ -138,23 +155,15 @@ class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
   }
 
   Future<void> _uploadAvatar() async {
-    if (file != null) {
-      String? url = await storageHelper.uploadAvatar(file!, auth.currentUser!);
-      if (url != null) {
-        try {
-          await auth.currentUser!.updatePhotoURL(url);
-          Navigator.pop(context);
-          Navigator.popAndPushNamed(context, HomeScreen.id);
-        } catch (e) {
-          Navigator.pop(context);
-          print(e);
-          SharyToast.show(
-              "Sorry , We are having problem uploading picture at the moment !");
-        }
+    String? url = await storageHelper.uploadAvatar(file!, auth.currentUser!);
+    if (url != null) {
+      try {
+        await auth.currentUser!.updatePhotoURL(url);
+      } catch (e) {
+        _closeDialogAndShowError();
+
+        print(e);
       }
-    } else {
-      Navigator.pop(context);
-      Navigator.popAndPushNamed(context, HomeScreen.id);
     }
   }
 
@@ -166,5 +175,10 @@ class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
         return SharyDialog.show("Hangup a moment!");
       },
     );
+  }
+
+  void _closeDialogAndShowError() {
+    Navigator.of(context, rootNavigator: true).pop();
+    SharyToast.show("Oops Something went wrong !. Please try again later");
   }
 }

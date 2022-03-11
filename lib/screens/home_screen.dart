@@ -8,6 +8,7 @@ import 'package:shary/models/shary_user.dart';
 import 'package:shary/post_data.dart';
 import 'package:shary/screens/new_post_screen.dart';
 import 'package:shary/screens/profile_screen.dart';
+import 'package:shary/screens/search_screen.dart';
 import 'package:shary/screens/welcome_screen.dart';
 import 'package:shary/shary_toast.dart';
 import 'package:shary/widgets/home_app_bar.dart';
@@ -58,6 +59,15 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Text("Shary"),
           backgroundColor: Theme.of(context).primaryColor,
           actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: IconButton(
+                icon: Icon(Icons.search_rounded),
+                onPressed: () {
+                  Navigator.pushNamed(context, SearchScreen.id);
+                },
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: IconButton(

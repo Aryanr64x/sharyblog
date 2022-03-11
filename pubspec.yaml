@@ -45,6 +45,8 @@ dependencies:
   provider: ^6.0.1
   timeago: ^3.1.0
   cached_network_image: ^3.2.0
+  algolia: ^1.0.4
+  http: ^0.13.4
 
 
 dev_dependencies:
