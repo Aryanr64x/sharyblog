@@ -1,8 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:shary/animations/react_animation.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:shary/shary_toast.dart';
 import '../post_data.dart';
+
 import 'package:shary/models/post.dart';
 
 class ReactPanel extends StatefulWidget {
@@ -11,31 +15,24 @@ class ReactPanel extends StatefulWidget {
   State<ReactPanel> createState() => _ReactPanelState();
 }
 
-class _ReactPanelState extends State<ReactPanel> {
+class _ReactPanelState extends State<ReactPanel>
+    with SingleTickerProviderStateMixin {
   bool isLoading = true;
   bool? isLiked;
+
   String get myname => widget.name;
   final FireStoreHelper storeHelper = FireStoreHelper();
+  late final AnimationController _animationController;
+  late final CurvedAnimation _animation;
+  late final ReactAnimation _reactAnimation;
 
   @override
   void initState() {
-    super.initState();
-
+    _reactAnimation = ReactAnimation(this, () {
+      setState(() {});
+    });
     checkIsLiked();
-  }
-
-  void checkIsLiked() async {
-    var data = await storeHelper
-        .isLiked(Provider.of<PostData>(context, listen: false).post.uid);
-    if (data == null) {
-      SharyToast.show(
-          "We are encountering some error.. Make sure your internet connection is right");
-    } else {
-      isLiked = data;
-      setState(() {
-        isLoading = false;
-      });
-    }
+    super.initState();
   }
 
   @override
@@ -58,7 +55,10 @@ class _ReactPanelState extends State<ReactPanel> {
           onPressed: () {
             likeOrUnlike();
           },
-          icon: Icon(Icons.favorite_rounded),
+          icon: Icon(
+            Icons.favorite_rounded,
+            size: _reactAnimation.iconSize(),
+          ),
           color: Theme.of(context).primaryColor,
         );
       } else {
@@ -66,10 +66,27 @@ class _ReactPanelState extends State<ReactPanel> {
           onPressed: () {
             likeOrUnlike();
           },
-          icon: Icon(Icons.favorite_border_rounded),
+          icon: Icon(
+            Icons.favorite_border_rounded,
+            size: _reactAnimation.iconSize(),
+          ),
           color: Theme.of(context).primaryColor,
         );
       }
+    }
+  }
+
+  void checkIsLiked() async {
+    var data = await storeHelper
+        .isLiked(Provider.of<PostData>(context, listen: false).post.uid);
+    if (data == null) {
+      SharyToast.show(
+          "We are encountering some error.. Make sure your internet connection is right");
+    } else {
+      isLiked = data;
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -78,8 +95,11 @@ class _ReactPanelState extends State<ReactPanel> {
     if (isLiked!) {
       setState(() {
         isLiked = false;
+
         Provider.of<PostData>(context, listen: false).decreaseLikesCount();
       });
+      _reactAnimation.animate();
+
       var isSuccessful = await storeHelper.dislike(post.uid, post.likesCount);
 
       if (!isSuccessful) {
@@ -95,6 +115,8 @@ class _ReactPanelState extends State<ReactPanel> {
         isLiked = true;
         Provider.of<PostData>(context, listen: false).increaseLikesCount();
       });
+      _reactAnimation.animate();
+
       var isSuccessful = await storeHelper.like(post.uid, post.likesCount);
       if (!isSuccessful) {
         SharyToast.show(
