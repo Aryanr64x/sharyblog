@@ -1,3 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shary/dialog.dart';
@@ -114,7 +118,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         }),
                     TextButton(
                         onPressed: () {
-                          Navigator.popAndPushNamed(context, SignUpScreen.id);
+                          Navigator.of(context).push(_createRoute());
                         },
                         child: Text("Dont have an account?"))
                   ],
@@ -124,6 +128,28 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => SignUpScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        final tween = Tween(begin: begin, end: end);
+        final curvedAnimation = CurvedAnimation(
+          parent: animation,
+          curve: curve,
+        );
+
+        return SlideTransition(
+          position: tween.animate(curvedAnimation),
+          child: child,
+        );
+      },
     );
   }
 

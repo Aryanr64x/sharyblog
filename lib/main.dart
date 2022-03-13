@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shary/screens/auth_screen.dart';
 import 'package:shary/screens/home_screen.dart';
 import 'package:shary/screens/new_post_screen.dart';
 import 'package:shary/screens/profile_screen.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
       initialRoute: initial(),
       routes: {
         WelcomeScreen.id: (context) => WelcomeScreen(),
+        AuthScreen.id: (context) => AuthScreen(),
         SignUpScreen.id: (context) => SignUpScreen(),
         SignUpTransitionScreen.id: (context) => SignUpTransitionScreen(),
         SignInScreen.id: (context) => SignInScreen(),

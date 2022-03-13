@@ -12,6 +12,8 @@ class AppPrimaryButton extends StatelessWidget {
       onPressed: onTap,
       child: Text(title),
       style: ButtonStyle(
+        shape: MaterialStateProperty.resolveWith((states) =>
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
         minimumSize:
             MaterialStateProperty.resolveWith((states) => Size(150.0, 40.0)),
         backgroundColor: MaterialStateProperty.resolveWith(
