@@ -89,9 +89,12 @@ class _AuthScreenState extends State<AuthScreen> {
                         _showSignIn = !_showSignIn;
                       });
                     },
-                    child: Text((_showSignIn)
-                        ? "Dont have an account?"
-                        : "Already have an account?"))
+                    child: Text(
+                      (_showSignIn)
+                          ? "Dont have an account?"
+                          : "Already have an account?",
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ))
               ],
             )
           ],

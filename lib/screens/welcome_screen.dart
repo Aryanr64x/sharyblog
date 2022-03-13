@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:shary/animations/logo_animation.dart';
 import 'package:shary/screens/auth_screen.dart';
 import 'package:shary/screens/sign_in_screen.dart';
 import 'package:shary/screens/sign_up_screen.dart';
@@ -18,25 +19,13 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _animationController;
-
+  late final LogoAnimation _logoAnimation;
   @override
   void initState() {
-    _animationController = AnimationController(
-        vsync: this,
-        duration: Duration(seconds: 8),
-        lowerBound: 0,
-        upperBound: 2 * pi);
-    _animationController.addListener(() {
+    _logoAnimation = LogoAnimation(this, () {
       setState(() {});
     });
-    _animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        _animationController.repeat();
-      }
-    });
-
-    _animationController.forward();
+    _logoAnimation.play();
     super.initState();
   }
 
@@ -54,7 +43,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             Hero(
               tag: 'logo',
               child: Transform.rotate(
-                angle: _animationController.value,
+                angle: _logoAnimation.value(),
                 child: Image(
                   image: AssetImage('images/logo.png'),
                   height: 300.0,
@@ -85,7 +74,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _logoAnimation.kill();
     super.dispose();
   }
 }
