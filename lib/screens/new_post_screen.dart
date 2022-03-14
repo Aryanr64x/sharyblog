@@ -7,8 +7,11 @@ import 'package:shary/dialog.dart';
 import 'package:shary/error.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/post.dart';
+import 'package:shary/shary_toast.dart';
+import 'package:shary/utils/field_type.dart';
 import 'package:shary/widgets/primary_button_widget.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
+import 'package:shary/widgets/shary_input.dart';
 
 class NewPostScreen extends StatelessWidget {
   static final String id = 'new_post';
@@ -29,21 +32,21 @@ class NewPostScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  TextFormField(
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please , you have to enter a title";
-                      }
-                    },
-                    style:
-                        TextStyle(fontWeight: FontWeight.w600, fontSize: 20.0),
-                    decoration: InputDecoration(
-                        hintText: "Enter a catchy title",
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none),
-                    onChanged: (String value) {
-                      _title = value;
-                    },
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SharyInput(
+                      validators: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please , you have to enter a title";
+                        }
+                      },
+                      fieldType: FieldType.PLAIN_TEXT,
+                      hintText: "Enter a catchy title.....",
+                      maxLines: 1,
+                      onChanged: (String value) {
+                        _title = value;
+                      },
+                    ),
                   ),
                   HtmlEditor(
                     callbacks: Callbacks(onChangeContent: (value) {
@@ -71,7 +74,7 @@ class NewPostScreen extends StatelessWidget {
                           } else {
                             Navigator.pop(context);
 
-                            SharyDialog.show(
+                            SharyToast.show(
                                 "Sorry we could not create the post at this time, Try again later. You maybe out of internet ");
                           }
                         }
@@ -90,7 +93,7 @@ class NewPostScreen extends StatelessWidget {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return SharyDialog.show("Creating a new post");
+        return SharyDialog.show("Creating a new post", context);
       },
     );
   }

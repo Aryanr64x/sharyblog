@@ -8,7 +8,6 @@ import 'package:shary/dialog.dart';
 import 'package:shary/error.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/screens/home_screen.dart';
-import 'package:shary/screens/sign_up_screen.dart';
 import 'package:shary/screens/sign_up_transition_screen.dart';
 import 'package:shary/widgets/primary_button_widget.dart';
 import 'package:shary/widgets/sign_in_form.dart';
@@ -145,7 +144,7 @@ class _AuthScreenState extends State<AuthScreen> {
       context: context,
       builder: (BuildContext context) {
         return SharyDialog.show(
-            (_showSignIn) ? "Signing In.." : "Signing up..");
+            (_showSignIn) ? "Signing In.." : "Signing up..", context);
       },
     );
   }

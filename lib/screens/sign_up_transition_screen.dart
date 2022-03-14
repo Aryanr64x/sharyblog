@@ -8,12 +8,14 @@ import 'package:shary/error.dart';
 import 'package:shary/firebase/firebase_storage_helper.dart';
 import 'package:shary/screens/home_screen.dart';
 import 'package:shary/shary_toast.dart';
+import 'package:shary/utils/field_type.dart';
 import 'package:shary/widgets/primary_button_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shary/widgets/image_upload_modal.dart';
-import 'package:shary/constants.dart';
+import 'package:shary/utils/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:shary/widgets/shary_input.dart';
 
 class SignUpTransitionScreen extends StatefulWidget {
   static final String id = 'sign_up_transition';
@@ -78,11 +80,11 @@ class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
                 SizedBox(
                   height: 20.0,
                 ),
-                TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    hintText: "Please provide an username",
-                  ),
+                SharyInput(
+                  fieldType: FieldType.PLAIN_TEXT,
+                  validators: (value) {},
+                  hintText: "Enter an username for yourself...",
+                  maxLines: 1,
                   onChanged: (value) {
                     username = value;
                   },
@@ -111,7 +113,7 @@ class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
       }
       var response = await http.post(
         Uri.parse(
-            'https://3eb9-2405-201-a409-c198-814-c00d-6580-2247.ngrok.io/'),
+            'https://67ff-2405-201-a409-c198-a97f-1972-1196-6a05.ngrok.io'),
         body: json.encode({
           'username': username,
           'user_avatar': auth.currentUser!.photoURL,
@@ -172,7 +174,7 @@ class _SignUpTransitionScreenState extends State<SignUpTransitionScreen> {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return SharyDialog.show("Hangup a moment!");
+        return SharyDialog.show("Hangup a moment!", context);
       },
     );
   }

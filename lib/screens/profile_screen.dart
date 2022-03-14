@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shary/display_picture.dart';
+import 'package:shary/utils/display_picture.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/post.dart';
 import 'package:shary/models/profile.dart';

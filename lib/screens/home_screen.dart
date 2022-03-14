@@ -11,6 +11,7 @@ import 'package:shary/screens/profile_screen.dart';
 import 'package:shary/screens/search_screen.dart';
 import 'package:shary/screens/welcome_screen.dart';
 import 'package:shary/shary_toast.dart';
+import 'package:shary/utils/page_manager.dart';
 import 'package:shary/widgets/appbar_profile_button.dart';
 import 'package:shary/widgets/home_app_bar.dart';
 import 'package:shary/widgets/post_card_widget.dart';
@@ -30,12 +31,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore store = FirebaseFirestore.instance;
-  final _pageController = PageController();
 
   bool isRefreshing = false;
   QueryDocumentSnapshot? last_snapshot;
+  late final PageManager _pageManager;
   List<Post> posts = [];
-  final double REFRESH_OFFEST = -70.8899663140498;
   late String username;
   late String userId;
   late String? userAvatar;
@@ -45,9 +45,17 @@ class _HomeScreenState extends State<HomeScreen> {
     username = auth.currentUser!.displayName!;
     userAvatar = auth.currentUser!.photoURL;
     userId = auth.currentUser!.uid;
-
+    _pageManager = PageManager(onRefresh: () {
+      if (!isRefreshing) {
+        setState(() {
+          isRefreshing = true;
+        });
+      }
+      fetchPosts(true);
+    }, onReachLast: () {
+      fetchPosts(false);
+    });
     fetchPosts(true);
-    _pageController.addListener(listener);
     super.initState();
   }
 
@@ -57,13 +65,13 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0,
-          title: Text("Shary"),
+          title: const Text("Shary"),
           backgroundColor: Theme.of(context).primaryColor,
           actions: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: IconButton(
-                icon: Icon(Icons.search_rounded),
+                icon: const Icon(Icons.search_rounded),
                 onPressed: () {
                   Navigator.pushNamed(context, SearchScreen.id);
                 },
@@ -78,10 +86,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   Post newPost = data as Post;
                   setState(() {
-                    posts.add(newPost);
+                    posts.insert(0, newPost);
                   });
                 },
-                icon: Icon(Icons.add),
+                icon: const Icon(Icons.add),
               ),
             ),
             Padding(
@@ -95,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: IconButton(
-                icon: Icon(Icons.power_settings_new),
+                icon: const Icon(Icons.power_settings_new),
                 onPressed: () async {
                   try {
                     await FirebaseAuth.instance.signOut();
@@ -112,9 +120,10 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             mayOrMayNotbeACircularIndicator(),
             PageView.builder(
-              physics: BouncingScrollPhysics(),
-              controller: _pageController,
+              physics: const BouncingScrollPhysics(),
+              controller: _pageManager.pageController,
               itemCount: posts.length + 1,
+              key: UniqueKey(),
               itemBuilder: (BuildContext context, int index) {
                 if (index == posts.length) {
                   return Center(
@@ -125,32 +134,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else {
                   return ChangeNotifierProvider<PostData>(
                     create: (context) => PostData(posts[index]),
-                    child: PostCard(
-                      key: Key(posts[index].uid),
-                    ),
+                    child: const PostCard(),
                   );
                 }
               },
             ),
           ],
         ));
-  }
-
-  void listener() {
-    // check we have reached the last page which is actually the loading page .....
-
-    if (_pageController.position.pixels ==
-        _pageController.position.maxScrollExtent) {
-      fetchPosts(false);
-    } else if (_pageController.position.pixels < REFRESH_OFFEST) {
-      if (!isRefreshing) {
-        setState(() {
-          isRefreshing = true;
-        });
-
-        fetchPosts(true);
-      }
-    }
   }
 
   void fetchPosts(bool initial) async {
@@ -171,8 +161,9 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         isRefreshing = false;
       });
+
       // we will jump the page controller anyway be it success of failure
-      _pageController.jumpTo(0);
+      _pageManager.goToFirst();
     } else {
       var data = await FireStoreHelper()
           .getNextPosts(1, last_snapshot as DocumentSnapshot);
@@ -180,6 +171,8 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           posts.addAll(data['posts']);
         });
+        _pageManager.stayOnNewPage(posts.length);
+        // As setstate takes us to the 0 page!
         last_snapshot = data['last_snapshot'];
       } else {
         // show error in getting more posts may be you are out of internet connection
@@ -195,7 +188,9 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Container(
             margin: EdgeInsets.only(left: 30.0),
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ),
           ),
         ],
       );

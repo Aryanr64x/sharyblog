@@ -6,8 +6,7 @@ import 'package:shary/screens/home_screen.dart';
 import 'package:shary/screens/new_post_screen.dart';
 import 'package:shary/screens/profile_screen.dart';
 import 'package:shary/screens/search_screen.dart';
-import 'package:shary/screens/sign_in_screen.dart';
-import 'package:shary/screens/sign_up_screen.dart';
+
 import 'package:shary/screens/sign_up_transition_screen.dart';
 import 'package:shary/screens/welcome_screen.dart';
 
@@ -27,9 +26,7 @@ class MyApp extends StatelessWidget {
       routes: {
         WelcomeScreen.id: (context) => WelcomeScreen(),
         AuthScreen.id: (context) => AuthScreen(),
-        SignUpScreen.id: (context) => SignUpScreen(),
         SignUpTransitionScreen.id: (context) => SignUpTransitionScreen(),
-        SignInScreen.id: (context) => SignInScreen(),
         HomeScreen.id: (context) => HomeScreen(),
         NewPostScreen.id: (context) => NewPostScreen(),
         SearchScreen.id: (context) => SearchScreen()

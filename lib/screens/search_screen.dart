@@ -3,7 +3,7 @@
 import 'package:algolia/algolia.dart';
 import 'package:flutter/material.dart';
 import 'package:shary/algolia/shary_algolia.dart';
-import 'package:shary/display_picture.dart';
+import 'package:shary/utils/display_picture.dart';
 import 'package:shary/models/shary_user.dart';
 import 'package:shary/screens/profile_screen.dart';
 

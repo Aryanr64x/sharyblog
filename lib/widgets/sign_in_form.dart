@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shary/error.dart';
 import 'package:shary/screens/home_screen.dart';
-import 'package:shary/screens/sign_up_screen.dart';
 import 'package:shary/utils/field_type.dart';
 import 'package:shary/widgets/primary_button_widget.dart';
 import 'package:shary/widgets/shary_input.dart';

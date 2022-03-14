@@ -3,7 +3,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shary/display_picture.dart';
+import 'package:shary/utils/display_picture.dart';
 import 'package:shary/models/profile.dart';
 import 'package:shary/models/shary_user.dart';
 import 'package:shary/screens/connection_screen.dart';

@@ -48,7 +48,7 @@ class FireStoreHelper {
       List<Post> posts = [];
       QuerySnapshot data = await _store
           .collection('posts')
-          .orderBy('created_at')
+          .orderBy('created_at', descending: true)
           .startAfterDocument(last_snapshot as DocumentSnapshot)
           .limit(1)
           .get();
@@ -130,8 +130,8 @@ class FireStoreHelper {
       await docref
           .collection('likes')
           .add({'username': auth.currentUser!.displayName});
-
-      await docref.update({'likes_count': likesCount + 1});
+      // Nope we wont add + 1 as it has already been done at the react.dart file
+      await docref.update({'likes_count': likesCount});
 
       return true;
     } catch (e) {
@@ -150,7 +150,7 @@ class FireStoreHelper {
       for (var data in collections.docs) {
         await data.reference.delete();
       }
-      await docRef.update({'likes_count': likesCount--});
+      await docRef.update({'likes_count': likesCount});
 
       return true;
     } catch (e) {

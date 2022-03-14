@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shary/display_picture.dart';
+import 'package:shary/utils/display_picture.dart';
 import 'package:shary/firebase/firebase_storage_helper.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/shary_user.dart';

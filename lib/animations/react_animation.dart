@@ -31,4 +31,8 @@ class ReactAnimation {
     _animationController.reset();
     _animationController.forward();
   }
+
+  void kill() {
+    _animationController.dispose();
+  }
 }

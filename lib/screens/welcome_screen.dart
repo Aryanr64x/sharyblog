@@ -5,8 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shary/animations/logo_animation.dart';
 import 'package:shary/screens/auth_screen.dart';
-import 'package:shary/screens/sign_in_screen.dart';
-import 'package:shary/screens/sign_up_screen.dart';
+
 import 'package:shary/widgets/primary_button_widget.dart';
 
 class WelcomeScreen extends StatefulWidget {

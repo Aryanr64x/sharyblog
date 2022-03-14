@@ -30,9 +30,11 @@ class PostCardBody extends StatelessWidget {
               flex: 1,
             ),
             Expanded(
-              child: Container(
-                child: Html(
-                  data: Provider.of<PostData>(context).post.body,
+              child: SingleChildScrollView(
+                child: Container(
+                  child: Html(
+                    data: Provider.of<PostData>(context).post.body,
+                  ),
                 ),
               ),
               flex: 8,

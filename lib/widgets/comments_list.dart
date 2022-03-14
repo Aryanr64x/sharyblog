@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:shary/display_picture.dart';
+import 'package:shary/utils/display_picture.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/comment.dart';
 import 'package:shary/models/shary_user.dart';

@@ -22,8 +22,7 @@ class _ReactPanelState extends State<ReactPanel>
 
   String get myname => widget.name;
   final FireStoreHelper storeHelper = FireStoreHelper();
-  late final AnimationController _animationController;
-  late final CurvedAnimation _animation;
+
   late final ReactAnimation _reactAnimation;
 
   @override
@@ -116,7 +115,7 @@ class _ReactPanelState extends State<ReactPanel>
         Provider.of<PostData>(context, listen: false).increaseLikesCount();
       });
       _reactAnimation.animate();
-
+      // Remember that we are passing an increased likes count over here so we dont need to increase in the Firebase file
       var isSuccessful = await storeHelper.like(post.uid, post.likesCount);
       if (!isSuccessful) {
         SharyToast.show(
@@ -127,5 +126,11 @@ class _ReactPanelState extends State<ReactPanel>
         });
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _reactAnimation.kill();
+    super.dispose();
   }
 }

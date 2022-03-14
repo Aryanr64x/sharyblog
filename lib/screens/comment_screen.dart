@@ -72,7 +72,7 @@ class CommentScreen extends StatelessWidget {
                                   commentsCount++;
                                   print("new comment has been created");
                                 } else {
-                                  SharyDialog.show(
+                                  SharyToast.show(
                                       "Sorry we cannot create  a comment now.. try again later !");
                                 }
                               } else {
