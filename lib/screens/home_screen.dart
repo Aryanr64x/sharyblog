@@ -6,14 +6,15 @@ import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/post.dart';
 import 'package:shary/models/shary_user.dart';
 import 'package:shary/post_data.dart';
+import 'package:shary/screens/auth_screen.dart';
 import 'package:shary/screens/new_post_screen.dart';
 import 'package:shary/screens/profile_screen.dart';
 import 'package:shary/screens/search_screen.dart';
 import 'package:shary/screens/welcome_screen.dart';
 import 'package:shary/shary_toast.dart';
 import 'package:shary/utils/page_manager.dart';
+import 'package:shary/widgets/appbar_home.dart';
 import 'package:shary/widgets/appbar_profile_button.dart';
-import 'package:shary/widgets/home_app_bar.dart';
 import 'package:shary/widgets/post_card_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
@@ -36,15 +37,17 @@ class _HomeScreenState extends State<HomeScreen> {
   QueryDocumentSnapshot? last_snapshot;
   late final PageManager _pageManager;
   List<Post> posts = [];
+  late SharyUser _authUser;
   late String username;
   late String userId;
   late String? userAvatar;
 
   @override
   void initState() {
-    username = auth.currentUser!.displayName!;
-    userAvatar = auth.currentUser!.photoURL;
-    userId = auth.currentUser!.uid;
+    _authUser = SharyUser(
+        id: auth.currentUser!.uid,
+        username: auth.currentUser!.displayName!,
+        userAvatar: auth.currentUser!.photoURL);
     _pageManager = PageManager(onRefresh: () {
       if (!isRefreshing) {
         setState(() {
@@ -62,59 +65,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          elevation: 0,
-          title: const Text("Shary"),
-          backgroundColor: Theme.of(context).primaryColor,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: IconButton(
-                icon: const Icon(Icons.search_rounded),
-                onPressed: () {
-                  Navigator.pushNamed(context, SearchScreen.id);
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: IconButton(
-                onPressed: () async {
-                  var data =
-                      await Navigator.pushNamed(context, NewPostScreen.id);
-
-                  Post newPost = data as Post;
-                  setState(() {
-                    posts.insert(0, newPost);
-                  });
-                },
-                icon: const Icon(Icons.add),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: AppbarProfileButton(
-                  profileUser: SharyUser(
-                      id: auth.currentUser!.uid,
-                      username: auth.currentUser!.displayName!,
-                      userAvatar: auth.currentUser!.photoURL)),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: IconButton(
-                icon: const Icon(Icons.power_settings_new),
-                onPressed: () async {
-                  try {
-                    await FirebaseAuth.instance.signOut();
-                    Navigator.popAndPushNamed(context, WelcomeScreen.id);
-                  } catch (e) {
-                    print(e);
-                  }
-                },
-              ),
-            ),
-          ],
+        appBar: AppBarHome(
+          authUser: _authUser,
+          onNewPost: (data) {
+            Post newPost = data as Post;
+            setState(() {
+              posts.insert(0, newPost);
+            });
+          },
         ),
         body: Stack(
           children: [
