@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:shary/shary_toast.dart';
+import 'package:shary/utils/shary_toast.dart';
 
 class Error {
   static show(FirebaseException e) {

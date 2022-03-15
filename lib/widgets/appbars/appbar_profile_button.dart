@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shary/models/shary_user.dart';
-import 'package:shary/screens/profile_screen.dart';
+import 'package:shary/screens/profilescreens/profile_screen.dart';
 
 class AppbarProfileButton extends StatelessWidget {
   SharyUser profileUser;

@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shary/models/shary_user.dart';
-import 'package:shary/screens/new_post_screen.dart';
-import 'package:shary/screens/search_screen.dart';
-import 'package:shary/screens/welcome_screen.dart';
-import 'package:shary/widgets/appbar_profile_button.dart';
+import 'package:shary/screens/postscreens/new_post_screen.dart';
+import 'package:shary/screens/profilescreens/search_screen.dart';
+import 'package:shary/screens/authscreens/welcome_screen.dart';
+import 'package:shary/widgets/appbars/appbar_profile_button.dart';
 
 class AppBarHome extends StatelessWidget with PreferredSizeWidget {
   SharyUser authUser;

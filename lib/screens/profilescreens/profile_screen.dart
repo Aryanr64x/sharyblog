@@ -8,10 +8,10 @@ import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/post.dart';
 import 'package:shary/models/profile.dart';
 import 'package:shary/models/shary_user.dart';
-import 'package:shary/post_data.dart';
-import 'package:shary/shary_toast.dart';
-import 'package:shary/widgets/post_card_widget.dart';
-import 'package:shary/widgets/profile_app_bar.dart';
+import 'package:shary/utils/post_data.dart';
+import 'package:shary/utils/shary_toast.dart';
+import 'package:shary/widgets/postwidgets/post_card_widget.dart';
+import 'package:shary/widgets/appbars/profile_app_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
   static final String id = "profile_screen";

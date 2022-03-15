@@ -4,14 +4,14 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shary/dialog.dart';
-import 'package:shary/error.dart';
+import 'package:shary/utils/dialog.dart';
+import 'package:shary/utils/error.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/screens/home_screen.dart';
-import 'package:shary/screens/sign_up_transition_screen.dart';
-import 'package:shary/widgets/primary_button_widget.dart';
-import 'package:shary/widgets/sign_in_form.dart';
-import 'package:shary/widgets/sign_up_form.dart';
+import 'package:shary/screens/authscreens/sign_up_transition_screen.dart';
+import 'package:shary/widgets/appwidgets/primary_button_widget.dart';
+import 'package:shary/widgets/authwidgets/sign_in_form.dart';
+import 'package:shary/widgets/authwidgets/sign_up_form.dart';
 
 class AuthScreen extends StatefulWidget {
   static final String id = "auth";

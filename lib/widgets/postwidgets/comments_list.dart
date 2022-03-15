@@ -4,7 +4,7 @@ import 'package:shary/utils/display_picture.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/comment.dart';
 import 'package:shary/models/shary_user.dart';
-import 'package:shary/screens/profile_screen.dart';
+import 'package:shary/screens/profilescreens/profile_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class CommentsList extends StatefulWidget {

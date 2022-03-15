@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:shary/utils/display_picture.dart';
 import 'package:shary/models/profile.dart';
 import 'package:shary/models/shary_user.dart';
-import 'package:shary/screens/connection_screen.dart';
-import 'package:shary/widgets/follow_unfollow.dart';
+import 'package:shary/screens/profilescreens/connection_screen.dart';
+import 'package:shary/widgets/userwidgets/follow_unfollow.dart';
 
 class ProfileAppBar extends StatefulWidget {
   SharyUser profileUser;

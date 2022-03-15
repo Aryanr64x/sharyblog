@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/shary_user.dart';
-import 'package:shary/shary_toast.dart';
+import 'package:shary/utils/shary_toast.dart';
 
 class FollowUnfollow extends StatefulWidget {
   SharyUser profileUser;

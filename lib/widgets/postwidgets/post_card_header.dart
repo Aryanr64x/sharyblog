@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:shary/utils/display_picture.dart';
 import 'package:shary/models/post.dart';
 import 'package:shary/models/shary_user.dart';
-import 'package:shary/post_data.dart';
-import 'package:shary/screens/profile_screen.dart';
-import 'package:shary/widgets/avatar.dart';
+import 'package:shary/utils/post_data.dart';
+import 'package:shary/screens/profilescreens/profile_screen.dart';
+import 'package:shary/widgets/userwidgets/avatar.dart';
 
 class PostCardHeader extends StatelessWidget {
   @override

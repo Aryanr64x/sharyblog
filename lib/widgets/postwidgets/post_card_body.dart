@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:shary/post_data.dart';
+import 'package:shary/utils/post_data.dart';
 
 class PostCardBody extends StatelessWidget {
   @override

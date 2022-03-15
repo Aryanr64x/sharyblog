@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shary/post_data.dart';
+import 'package:shary/utils/post_data.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class DisplayPicture {

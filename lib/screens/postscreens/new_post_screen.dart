@@ -3,15 +3,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:shary/dialog.dart';
-import 'package:shary/error.dart';
+import 'package:shary/utils/dialog.dart';
+import 'package:shary/utils/error.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/post.dart';
-import 'package:shary/shary_toast.dart';
+import 'package:shary/utils/shary_toast.dart';
 import 'package:shary/utils/field_type.dart';
-import 'package:shary/widgets/primary_button_widget.dart';
+import 'package:shary/widgets/appwidgets/primary_button_widget.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
-import 'package:shary/widgets/shary_input.dart';
+import 'package:shary/widgets/appwidgets/shary_input.dart';
 
 class NewPostScreen extends StatelessWidget {
   static final String id = 'new_post';

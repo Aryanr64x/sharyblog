@@ -3,19 +3,19 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:shary/dialog.dart';
-import 'package:shary/error.dart';
+import 'package:shary/utils/dialog.dart';
+import 'package:shary/utils/error.dart';
 import 'package:shary/firebase/firebase_storage_helper.dart';
 import 'package:shary/screens/home_screen.dart';
-import 'package:shary/shary_toast.dart';
+import 'package:shary/utils/shary_toast.dart';
 import 'package:shary/utils/field_type.dart';
-import 'package:shary/widgets/primary_button_widget.dart';
+import 'package:shary/widgets/appwidgets/primary_button_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shary/widgets/image_upload_modal.dart';
+import 'package:shary/widgets/userwidgets/image_upload_modal.dart';
 import 'package:shary/utils/constants.dart';
 import 'package:http/http.dart' as http;
-import 'package:shary/widgets/shary_input.dart';
+import 'package:shary/widgets/appwidgets/shary_input.dart';
 
 class SignUpTransitionScreen extends StatefulWidget {
   static final String id = 'sign_up_transition';

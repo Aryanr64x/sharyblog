@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shary/widgets/comment_panel.dart';
-import 'package:shary/widgets/react.dart';
+import 'package:shary/widgets/postwidgets/comment_panel.dart';
+import 'package:shary/widgets/postwidgets/react.dart';
 
 class PostCardFooter extends StatefulWidget {
   @override

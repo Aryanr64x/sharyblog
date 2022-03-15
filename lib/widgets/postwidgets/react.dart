@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:shary/animations/react_animation.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:provider/provider.dart';
-import 'package:shary/shary_toast.dart';
-import '../post_data.dart';
+import 'package:shary/utils/shary_toast.dart';
+import '../../utils/post_data.dart';
 
 import 'package:shary/models/post.dart';
 

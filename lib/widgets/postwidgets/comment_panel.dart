@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shary/models/post.dart';
-import 'package:shary/screens/comment_screen.dart';
+import 'package:shary/screens/postscreens/comment_screen.dart';
 import 'package:provider/provider.dart';
-import '../post_data.dart';
+import '../../utils/post_data.dart';
 
 class CommentPanel extends StatefulWidget {
   @override

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shary/models/post.dart';
-import 'package:shary/widgets/post_card_header.dart';
-import 'package:shary/widgets/post_card_body.dart';
-import 'package:shary/widgets/post_card_footer.dart';
+import 'package:shary/widgets/postwidgets/post_card_header.dart';
+import 'package:shary/widgets/postwidgets/post_card_body.dart';
+import 'package:shary/widgets/postwidgets/post_card_footer.dart';
 
 class PostCard extends StatelessWidget {
   const PostCard({Key? key}) : super(key: key);

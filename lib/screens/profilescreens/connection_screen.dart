@@ -3,8 +3,8 @@ import 'package:shary/utils/display_picture.dart';
 import 'package:shary/firebase/firebase_storage_helper.dart';
 import 'package:shary/firebase/firestore_helper.dart';
 import 'package:shary/models/shary_user.dart';
-import 'package:shary/screens/profile_screen.dart';
-import 'package:shary/shary_toast.dart';
+import 'package:shary/screens/profilescreens/profile_screen.dart';
+import 'package:shary/utils/shary_toast.dart';
 
 class ConnectionScreen extends StatefulWidget {
   String profileId;

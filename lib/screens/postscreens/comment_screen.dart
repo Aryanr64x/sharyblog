@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shary/dialog.dart';
+import 'package:shary/utils/dialog.dart';
 import 'package:shary/firebase/firestore_helper.dart';
-import 'package:shary/shary_toast.dart';
-import 'package:shary/widgets/comments_list.dart';
-import 'package:shary/widgets/primary_button_widget.dart';
+import 'package:shary/utils/shary_toast.dart';
+import 'package:shary/widgets/postwidgets/comments_list.dart';
+import 'package:shary/widgets/appwidgets/primary_button_widget.dart';
 
 // since validation is also negligible and only one field is there we will use Textfield without form
 class CommentScreen extends StatelessWidget {
